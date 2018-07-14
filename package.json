@@ -1,0 +1,44 @@
+{
+  "name": "chain-lightning",
+  "version": "0.0.1",
+  "description": "Linked list",
+  "main": "lib/chainlightning.js",
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+  },
+  "scripts": {
+    "test": "tea-time -R dot -O"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cronvel/chain-lightning.git"
+  },
+  "keywords": [
+    "linked",
+    "list"
+  ],
+  "author": "Cédric Ronvel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cronvel/chain-lightning/issues"
+  },
+  "config": {
+    "tea-time": {
+      "coverDir": [
+        "lib"
+      ]
+    }
+  },
+  "copyright": {
+    "title": "Chain Lightning",
+    "years": [
+      2018
+    ],
+    "owner": "Cédric Ronvel"
+  }
+}
