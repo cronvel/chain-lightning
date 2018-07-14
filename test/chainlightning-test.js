@@ -446,6 +446,175 @@ describe( "Advanced Array-like features" , () => {
 
 describe( "Advanced custom features" , () => {
 	
+	it( ".remove()/.delete()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ,
+			e4 = { v: 'bobby' } ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		list.remove( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List() ;
+		list.remove( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e2 ) ;
+		list.remove( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e2 , e1 , e3 ) ;
+		list.remove( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e3 , e2 ) ;
+		list.remove( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
+	it( ".moveAfter()/.moveToTail()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ,
+			e4 = { v: 'bobby' } ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e1 ) , list.slotOf( e1 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e1 ) , list.slotOf( e2 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e1 ) , list.slotOf( e3 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e2 , e3 , e1 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveToTail( list.slotOf( e1 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e2 , e3 , e1 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e2 ) , list.slotOf( e1 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e2 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e2 ) , list.slotOf( e3 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveToTail( list.slotOf( e2 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e3 ) , list.slotOf( e1 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e3 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveAfter( list.slotOf( e3 ) , list.slotOf( e3 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveToTail( list.slotOf( e3 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
+	it( ".moveBefore()/.moveToHead()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ,
+			e4 = { v: 'bobby' } ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e1 ) , list.slotOf( e1 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveToHead( list.slotOf( e1 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e1 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e1 ) , list.slotOf( e3 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e2 ) , list.slotOf( e1 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveToHead( list.slotOf( e2 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e2 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e2 ) , list.slotOf( e3 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e3 ) , list.slotOf( e1 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e3 , e1 , e2 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveToHead( list.slotOf( e3 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e3 , e1 , e2 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e3 ) , list.slotOf( e2 ) ) ).to.be.true() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.moveBefore( list.slotOf( e3 ) , list.slotOf( e3 ) ) ).to.be.false() ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
 	it( ".insertAfter()" , () => {
 		var list ,
 			e1 = { v: 'jack' } ,
