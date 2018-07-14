@@ -9,8 +9,7 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "scripts": {
     "test": "tea-time -R dot -O"
   },
