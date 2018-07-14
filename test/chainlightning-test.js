@@ -64,6 +64,28 @@ describe( "Basic features tests" , () => {
 		expect( list.tail.element ).to.be( 'steve' ) ;
 	} ) ;
 	
+	it( "List.from() should create a list from any iterable" , () => {
+		var list ;
+		
+		list = List.from( new Set() ) ;
+		expect( list ).to.have.length( 0 ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		expect( list.head ).to.be( null ) ;
+		expect( list.tail ).to.be( null ) ;
+		
+		list = List.from( new Set( [ 'jack' ] ) ) ;
+		expect( list ).to.have.length( 1 ) ;
+		expect( [ ... list ] ).to.equal( [ 'jack' ] ) ;
+		expect( list.head.element ).to.be( 'jack' ) ;
+		expect( list.tail.element ).to.be( 'jack' ) ;
+		
+		list = List.from( new Set( [ 'jack' , 'jean' , 'steve' ] ) ) ;
+		expect( list ).to.have.length( 3 ) ;
+		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
+		expect( list.head.element ).to.be( 'jack' ) ;
+		expect( list.tail.element ).to.be( 'steve' ) ;
+	} ) ;
+	
 	it( ".push()/.append()" , () => {
 		var list ;
 		
@@ -210,7 +232,93 @@ describe( "Advanced features tests" , () => {
 		list.set( list.lastSlotOf( e2 ) , e4 ) ;
 		expect( [ ... list ] ).to.equal( [ { v: 'jack' } , { v: 'bobby' } , { v: 'steve' } , { v: 'bob' } , { v: 'bob' } , { v: 'bobby' } ] ) ;
 	} ) ;
+	
+	it( ".includes()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List() ;
+		expect( list.includes( e2 ) ).to.be.false() ;
+		
+		list = new List( e1 ) ;
+		expect( list.includes( e2 ) ).to.be.false() ;
+		
+		list = new List( e1 , e3 ) ;
+		expect( list.includes( e2 ) ).to.be.false() ;
+		
+		list = new List( e2 ) ;
+		expect( list.includes( e2 ) ).to.be.true() ;
+		
+		list = new List( e2 , e2 ) ;
+		expect( list.includes( e2 ) ).to.be.true() ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.includes( e2 ) ).to.be.true() ;
+		
+		list = new List( e1 , e3 , e2 ) ;
+		expect( list.includes( e2 ) ).to.be.true() ;
+		
+		list = new List( e2 , e1 , e3 ) ;
+		expect( list.includes( e2 ) ).to.be.true() ;
+	} ) ;
 
+	it( ".forEach()" , () => {
+		var list ,
+			accumulator = [] ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List() ;
+		list.forEach( element => accumulator.push( element.v ) ) ;
+		expect( accumulator ).to.equal( [] ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		list.forEach( element => accumulator.push( element.v ) ) ;
+		expect( accumulator ).to.equal( [ 'jack' , 'bob' , 'steve' ] ) ;
+	} ) ;
+
+	it( ".some()/.every()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List() ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.false() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.true() ;
+		
+		list = new List( e1 ) ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.false() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.false() ;
+		
+		list = new List( e2 ) ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.true() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.true() ;
+		
+		list = new List( e1 , e2 ) ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.true() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.false() ;
+		
+		list = new List( e2 , e1 ) ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.true() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.false() ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.true() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.false() ;
+		
+		list = new List( e1 , e2 , e2 , e3 ) ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.true() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.false() ;
+		
+		list = new List( e2 , e2 , e2 ) ;
+		expect( list.some( element => element.v === 'bob' ) ).to.be.true() ;
+		expect( list.every( element => element.v === 'bob' ) ).to.be.true() ;
+	} ) ;
+	
 	it( ".find()" , () => {
 		var list ,
 			e1 = { v: 'jack' } ,
