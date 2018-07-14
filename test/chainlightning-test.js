@@ -36,54 +36,68 @@ var List = require( '..' ) ;
 
 
 
+function sanityCheck( list ) {
+	var length = 0 ,
+		lastSlot = null ,
+		slot = list.head ;
+	
+	while ( slot ) {
+		expect( slot.list ).to.be( list ) ;
+		expect( slot.previous ).to.be( lastSlot ) ;
+		
+		// Useless because we precisely come from that lastSlot
+		//if ( lastSlot ) { expect( lastSlot.next ).to.be( slot ) ; }
+		
+		length ++ ;
+		
+		lastSlot = slot ;
+		slot = slot.next ;
+	}
+	
+	expect( list.tail ).to.be( lastSlot ) ;
+	expect( list.length ).to.be( length ) ;
+}
+
+
+
+
+
 			/* Tests */
 
 
 
-describe( "Basic features tests" , () => {
+describe( "Basic features" , () => {
 	
 	it( "constructor arguments should be added as elements" , () => {
 		var list ;
 		
 		list = new List() ;
-		expect( list ).to.have.length( 0 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
-		expect( list.head ).to.be( null ) ;
-		expect( list.tail ).to.be( null ) ;
+		sanityCheck( list ) ;
 		
 		list = new List( 'jack' ) ;
-		expect( list ).to.have.length( 1 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'jack' ) ;
+		sanityCheck( list ) ;
 		
 		list = new List( 'jack' , 'jean' , 'steve' ) ;
-		expect( list ).to.have.length( 3 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
+		sanityCheck( list ) ;
 	} ) ;
 	
 	it( "List.from() should create a list from any iterable" , () => {
 		var list ;
 		
 		list = List.from( new Set() ) ;
-		expect( list ).to.have.length( 0 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
-		expect( list.head ).to.be( null ) ;
-		expect( list.tail ).to.be( null ) ;
+		sanityCheck( list ) ;
 		
 		list = List.from( new Set( [ 'jack' ] ) ) ;
-		expect( list ).to.have.length( 1 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'jack' ) ;
+		sanityCheck( list ) ;
 		
 		list = List.from( new Set( [ 'jack' , 'jean' , 'steve' ] ) ) ;
-		expect( list ).to.have.length( 3 ) ;
+		sanityCheck( list ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
 	} ) ;
 	
 	it( ".push()/.append()" , () => {
@@ -93,23 +107,15 @@ describe( "Basic features tests" , () => {
 		expect( list ).to.have.length( 0 ) ;
 		
 		list.push( 'bob' ) ;
-		expect( list ).to.have.length( 1 ) ;
-		
 		list.append( 'bill' ) ;
-		expect( list ).to.have.length( 2 ) ;
-		
 		list.push( 'jack' , 'jean' , 'steve' ) ;
-		expect( list ).to.have.length( 5 ) ;
 		expect( [ ... list ] ).to.equal( [ 'bob' , 'bill' , 'jack' , 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'bob' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
+		sanityCheck( list ) ;
 		
 		list = new List() ;
 		list.push( 'jack' , 'jean' , 'steve' ) ;
-		expect( list ).to.have.length( 3 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
+		sanityCheck( list ) ;
 	} ) ;
 	
 	it( ".unshift()/.prepend()" , () => {
@@ -119,23 +125,15 @@ describe( "Basic features tests" , () => {
 		expect( list ).to.have.length( 0 ) ;
 		
 		list.unshift( 'bob' ) ;
-		expect( list ).to.have.length( 1 ) ;
-		
 		list.prepend( 'bill' ) ;
-		expect( list ).to.have.length( 2 ) ;
-		
 		list.unshift( 'jack' , 'jean' , 'steve' ) ;
-		expect( list ).to.have.length( 5 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' , 'bill' , 'bob' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'bob' ) ;
+		sanityCheck( list ) ;
 		
 		list = new List() ;
 		list.push( 'jack' , 'jean' , 'steve' ) ;
-		expect( list ).to.have.length( 3 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
+		sanityCheck( list ) ;
 	} ) ;
 	
 	it( ".pop()" , () => {
@@ -144,34 +142,27 @@ describe( "Basic features tests" , () => {
 		list = new List() ;
 		expect( list.pop() ).to.be( undefined ) ;
 		expect( list ).to.have.length( 0 ) ;
-		expect( list.head ).to.be( null ) ;
-		expect( list.tail ).to.be( null ) ;
+		sanityCheck( list ) ;
 		
 		list.push( 'jack' , 'jean' , 'steve' ) ;
-		expect( list ).to.have.length( 3 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.pop() ).to.be( 'steve' ) ;
-		expect( list ).to.have.length( 2 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'jean' ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.pop() ).to.be( 'jean' ) ;
-		expect( list ).to.have.length( 1 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' ] ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.pop() ).to.be( 'jack' ) ;
-		expect( list ).to.have.length( 0 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
-		expect( list.head ).to.be( null ) ;
-		expect( list.tail ).to.be( null ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.pop() ).to.be( undefined ) ;
-		expect( list ).to.have.length( 0 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
 	} ) ;
 	
 	it( ".shift()" , () => {
@@ -180,40 +171,33 @@ describe( "Basic features tests" , () => {
 		list = new List() ;
 		expect( list.shift() ).to.be( undefined ) ;
 		expect( list ).to.have.length( 0 ) ;
-		expect( list.head ).to.be( null ) ;
-		expect( list.tail ).to.be( null ) ;
+		sanityCheck( list ) ;
 		
 		list.push( 'jack' , 'jean' , 'steve' ) ;
-		expect( list ).to.have.length( 3 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'jack' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.shift() ).to.be( 'jack' ) ;
-		expect( list ).to.have.length( 2 ) ;
 		expect( [ ... list ] ).to.equal( [ 'jean' , 'steve' ] ) ;
-		expect( list.head.element ).to.be( 'jean' ) ;
-		expect( list.tail.element ).to.be( 'steve' ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.shift() ).to.be( 'jean' ) ;
-		expect( list ).to.have.length( 1 ) ;
 		expect( [ ... list ] ).to.equal( [ 'steve' ] ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.shift() ).to.be( 'steve' ) ;
-		expect( list ).to.have.length( 0 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
-		expect( list.head ).to.be( null ) ;
-		expect( list.tail ).to.be( null ) ;
+		sanityCheck( list ) ;
 		
 		expect( list.shift() ).to.be( undefined ) ;
-		expect( list ).to.have.length( 0 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
 	} ) ;
 } ) ;
 	
 
 
-describe( "Advanced features tests" , () => {
+describe( "Advanced Array-like features" , () => {
 	
 	it( ".slotOf()/.lastSlotOf()" , () => {
 		var list ,
@@ -354,6 +338,101 @@ describe( "Advanced features tests" , () => {
 		
 		list.unshift( e4 ) ;
 		expect( list.get( list.findSlot( element => element.v === 'bob' ) ) ).to.be( e4 ) ;
+	} ) ;
+	
+	it( ".map()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List().map( element => element.v + element.v ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 ).map( element => element.v + element.v ) ;
+		expect( [ ... list ] ).to.equal( [ 'jackjack' ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ).map( element => element.v + element.v ) ;
+		expect( [ ... list ] ).to.equal( [ 'jackjack' , 'bobbob' , 'stevesteve' ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
+	it( ".reduce()/.reduceRight" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List() ;
+		expect( list.reduce( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( '' ) ;
+		expect( list.reduceRight( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( '' ) ;
+		
+		list = new List( e1 ) ;
+		expect( list.reduce( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( 'jack' ) ;
+		expect( list.reduceRight( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( 'jack' ) ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		expect( list.reduce( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( 'jackbobsteve' ) ;
+		expect( list.reduceRight( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( 'stevebobjack' ) ;
+	} ) ;
+} ) ;
+
+
+
+describe( "Advanced custom features" , () => {
+	
+	it( ".insertAfter()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ,
+			e4 = { v: 'bobby' } ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		
+		list.insertAfter( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list.insertAfter( list.slotOf( e2 ) , e4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e4 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list.insertAfter( list.slotOf( e1 ) , e4 , e4 , e4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e4 , e4 , e4 , e2 , e4 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list.insertAfter( list.slotOf( e3 ) , e4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e4 , e4 , e4 , e2 , e4 , e3 , e4 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
+	it( ".insertBefore()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ,
+			e4 = { v: 'bobby' } ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		
+		list.insertBefore( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list.insertBefore( list.slotOf( e2 ) , e4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e4 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list.insertBefore( list.slotOf( e1 ) , e4 , e4 , e4 ) ;
+		expect( [ ... list ] ).to.equal( [ e4 , e4 , e4 , e1 , e4 , e2 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list.insertBefore( list.slotOf( e3 ) , e4 ) ;
+		expect( [ ... list ] ).to.equal( [ e4 , e4 , e4 , e1 , e4 , e2 , e4 , e3 ] ) ;
+		sanityCheck( list ) ;
 	} ) ;
 } ) ;
 
