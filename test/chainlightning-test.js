@@ -377,6 +377,69 @@ describe( "Advanced Array-like features" , () => {
 		expect( list.reduce( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( 'jackbobsteve' ) ;
 		expect( list.reduceRight( ( accumulator , element ) => accumulator + element.v , '' ) ).to.equal( 'stevebobjack' ) ;
 	} ) ;
+	
+	it( ".filter()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List( e2 , e2 , e2 ) ;
+		expect( list.filter( () => true ) ).not.to.be( list ) ;
+		
+		list = new List().filter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 ).filter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 ).filter( element => element.v.length < 4 ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ).filter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e3 ).filter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e2 , e2 , e2 ).filter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ).filter( element => element.v.length < 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e2 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
+	it( ".reverse()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List().reverse() ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 ).reverse() ;
+		expect( [ ... list ] ).to.equal( [ e1 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ).reverse() ;
+		expect( [ ... list ] ).to.equal( [ e3 , e2 , e1 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
+	it( "missing .concat()" ) ;
+	it( "missing .copyWithin()" ) ;
+	it( "missing .slice()" ) ;
+	it( "missing .splice()" ) ;
+	it( "missing .sort()" ) ;
 } ) ;
 
 
@@ -432,6 +495,44 @@ describe( "Advanced custom features" , () => {
 		
 		list.insertBefore( list.slotOf( e3 ) , e4 ) ;
 		expect( [ ... list ] ).to.equal( [ e4 , e4 , e4 , e1 , e4 , e2 , e4 , e3 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
+	it( ".inPlaceFilter()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ;
+		
+		list = new List( e2 , e2 , e2 ) ;
+		expect( list.inPlaceFilter( () => true ) ).to.be( list ) ;
+		
+		list = new List().inPlaceFilter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 ).inPlaceFilter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 ).inPlaceFilter( element => element.v.length < 4 ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ).inPlaceFilter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e3 ).inPlaceFilter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e2 , e2 , e2 ).inPlaceFilter( element => element.v.length >= 4 ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e2 , e3 ).inPlaceFilter( element => element.v.length < 4 ) ;
+		expect( [ ... list ] ).to.equal( [ e2 ] ) ;
 		sanityCheck( list ) ;
 	} ) ;
 } ) ;
