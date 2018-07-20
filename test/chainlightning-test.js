@@ -199,6 +199,33 @@ describe( "Basic features" , () => {
 
 describe( "Advanced Array-like features" , () => {
 	
+	it( ".slots()" , () => {
+		var slots ;
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ,
+			e4 = { v: 'bobby' } ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		slots = list.slots() ;
+		expect( slots ).to.be.an( Array ) ;
+		expect( slots ).to.have.length( 3 ) ;
+		expect( slots.map( e => e.element ) ).to.equal( [ e1 , e2 , e3 ] ) ;
+		
+		list = new List() ;
+		slots = list.slots() ;
+		expect( slots ).to.be.an( Array ) ;
+		expect( slots ).to.have.length( 0 ) ;
+		expect( slots.map( e => e.element ) ).to.equal( [] ) ;
+		
+		list = new List( e1 , e2 , e2 , e2 , e3 ) ;
+		slots = list.slots() ;
+		expect( slots ).to.be.an( Array ) ;
+		expect( slots ).to.have.length( 5 ) ;
+		expect( slots.map( e => e.element ) ).to.equal( [ e1 , e2 , e2 , e2 , e3 ] ) ;
+	} ) ;
+	
 	it( ".slotOf()/.lastSlotOf()" , () => {
 		var list ,
 			e1 = { v: 'jack' } ,
