@@ -446,6 +446,39 @@ describe( "Advanced Array-like features" , () => {
 
 describe( "Advanced custom features" , () => {
 	
+	it( ".removeSlot()/.deleteSlot()" , () => {
+		var list ,
+			e1 = { v: 'jack' } ,
+			e2 = { v: 'bob' } ,
+			e3 = { v: 'steve' } ,
+			e4 = { v: 'bobby' } ;
+		
+		list = new List( e1 , e2 , e3 ) ;
+		list.removeSlot( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List() ;
+		list.removeSlot( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e2 ) ;
+		list.removeSlot( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e2 , e1 , e3 ) ;
+		list.removeSlot( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		list = new List( e1 , e3 , e2 ) ;
+		list.removeSlot( list.slotOf( e2 ) ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+	} ) ;
+	
 	it( ".remove()/.delete()" , () => {
 		var list ,
 			e1 = { v: 'jack' } ,
@@ -454,27 +487,39 @@ describe( "Advanced custom features" , () => {
 			e4 = { v: 'bobby' } ;
 		
 		list = new List( e1 , e2 , e3 ) ;
-		list.remove( list.slotOf( e2 ) ) ;
+		list.remove( e2 ) ;
 		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
 		sanityCheck( list ) ;
 		
 		list = new List() ;
-		list.remove( list.slotOf( e2 ) ) ;
+		list.remove( e2 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
 		sanityCheck( list ) ;
 		
 		list = new List( e2 ) ;
-		list.remove( list.slotOf( e2 ) ) ;
+		list.remove( e2 ) ;
 		expect( [ ... list ] ).to.equal( [] ) ;
 		sanityCheck( list ) ;
 		
 		list = new List( e2 , e1 , e3 ) ;
-		list.remove( list.slotOf( e2 ) ) ;
+		list.remove( e2 ) ;
 		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
 		sanityCheck( list ) ;
 		
 		list = new List( e1 , e3 , e2 ) ;
-		list.remove( list.slotOf( e2 ) ) ;
+		list.remove( e2 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		// Remove all occurences
+		list = new List( e2 , e2 , e2 , e1 , e2 , e3 , e2 ) ;
+		list.remove( e2 ) ;
+		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
+		sanityCheck( list ) ;
+		
+		// NaN test
+		list = new List( NaN , NaN , NaN , e1 , NaN , e3 , NaN ) ;
+		list.remove( NaN ) ;
 		expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
 		sanityCheck( list ) ;
 	} ) ;
