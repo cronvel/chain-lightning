@@ -63,6 +63,33 @@ function sanityCheck( tree ) {
 
 
 
+function debugTree( tree ) {
+	console.log( "Debug tree:" ) ;
+	debugSlot( tree.trunc , 1 ) ;
+} ;
+
+
+
+function debugSlot( slot , level ) {
+	var prefix = '. ' ;
+	
+	if ( slot.parent ) {
+		prefix = slot.parent.left === slot ? '< ' : '> ' ;
+	}
+	
+	console.log( '    '.repeat( level ) + prefix + slot.key ) ;
+	
+	if ( slot.left ) {
+		debugSlot( slot.left , level + 1 ) ;
+	}
+	
+	if ( slot.right ) {
+		debugSlot( slot.right , level + 1 ) ;
+	}
+} ;
+
+
+
 
 
 			/* Tests */
@@ -80,11 +107,11 @@ describe( "Binary Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [] ) ;
 			sanityCheck( tree ) ;
 			
-			tree = new BinaryTree( 'jack' ) ;
+			tree = new BinaryTree( null , 'jack' ) ;
 			expect( [ ... tree ] ).to.equal( [ 'jack' ] ) ;
 			sanityCheck( tree ) ;
 			
-			tree = new BinaryTree( 'jack' , 'jean' , 'steve' ) ;
+			tree = new BinaryTree( null , 'jack' , 'jean' , 'steve' ) ;
 			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
 			sanityCheck( tree ) ;
 		} ) ;
@@ -105,22 +132,56 @@ describe( "Binary Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
 		} ) ;
 		
-		it( ".push()/.append()" , () => {
+		it( ".insert()" , () => {
 			var tree ;
 			
 			tree = new BinaryTree() ;
 			expect( tree ).to.have.length( 0 ) ;
 			
-			tree.push( 'bob' ) ;
-			tree.append( 'bill' ) ;
-			tree.push( 'jack' , 'jean' , 'steve' ) ;
+			tree.insert( 'bob' ) ;
+			tree.insert( 'bill' ) ;
+			tree.insert( 'jack' , 'jean' , 'steve' ) ;
 			expect( [ ... tree ] ).to.equal( [ 'bob' , 'bill' , 'jack' , 'jean' , 'steve' ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree() ;
-			tree.push( 'jack' , 'jean' , 'steve' ) ;
+			tree.insert( 'jack' , 'jean' , 'steve' ) ;
 			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
 			sanityCheck( tree ) ;
+		} ) ;
+		
+		it( "set and get elements" , () => {
+			var tree ;
+			
+			tree = new BinaryTree() ;
+			
+			tree.set( 3 , 'jack' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jack' ] ) ;
+			sanityCheck( tree ) ;
+			
+			tree.set( 2 , 'jean' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'jack' ] ) ;
+			sanityCheck( tree ) ;
+			
+			tree.set( 5 , 'steve' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'jack' , 'steve' ] ) ;
+			sanityCheck( tree ) ;
+			
+			tree.set( 2.5 , 'john' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'jack' , 'steve' ] ) ;
+			sanityCheck( tree ) ;
+			
+			tree.set( 2.7 , 'robert' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'jack' , 'steve' ] ) ;
+			sanityCheck( tree ) ;
+			
+			debugTree( tree ) ;
+
+			expect( tree.get( 3 ) ).to.equal( 'jack' ) ;
+			expect( tree.get( 2 ) ).to.equal( 'jean' ) ;
+			expect( tree.get( 5 ) ).to.equal( 'steve' ) ;
+			expect( tree.get( 2.5 ) ).to.equal( 'john' ) ;
+			expect( tree.get( 2.7 ) ).to.equal( 'robert' ) ;
 		} ) ;
 		
 		return ;
