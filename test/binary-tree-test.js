@@ -89,8 +89,6 @@ describe( "Binary Tree" , () => {
 			sanityCheck( tree ) ;
 		} ) ;
 		
-		return ;
-		
 		it( "BinaryTree.from() should create a tree from any iterable" , () => {
 			var tree ;
 			
@@ -124,6 +122,8 @@ describe( "Binary Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
 			sanityCheck( tree ) ;
 		} ) ;
+		
+		return ;
 		
 		it( ".unshift()/.prepend()" , () => {
 			var tree ;
