@@ -40,23 +40,23 @@ const BinaryTree = lib.BinaryTree ;
 function sanityCheck( tree ) {
 	/*
 	var length = 0 ,
-		lastSlot = null ,
-		slot = list.head ;
+		lastNode = null ,
+		node = list.head ;
 	
-	while ( slot ) {
-		expect( slot.list ).to.be( list ) ;
-		expect( slot.previous ).to.be( lastSlot ) ;
+	while ( node ) {
+		expect( node.list ).to.be( list ) ;
+		expect( node.previous ).to.be( lastNode ) ;
 		
-		// Useless because we precisely come from that lastSlot
-		//if ( lastSlot ) { expect( lastSlot.next ).to.be( slot ) ; }
+		// Useless because we precisely come from that lastNode
+		//if ( lastNode ) { expect( lastNode.next ).to.be( node ) ; }
 		
 		length ++ ;
 		
-		lastSlot = slot ;
-		slot = slot.next ;
+		lastNode = node ;
+		node = node.next ;
 	}
 	
-	expect( list.tail ).to.be( lastSlot ) ;
+	expect( list.tail ).to.be( lastNode ) ;
 	expect( list.length ).to.be( length ) ;
 	*/
 }
@@ -65,27 +65,7 @@ function sanityCheck( tree ) {
 
 function debugTree( tree ) {
 	console.log( "Debug tree:" ) ;
-	debugSlot( tree.trunc , 1 ) ;
-} ;
-
-
-
-function debugSlot( slot , level ) {
-	var prefix = '. ' ;
-	
-	if ( slot.parent ) {
-		prefix = slot.parent.left === slot ? '< ' : '> ' ;
-	}
-	
-	console.log( '    '.repeat( level ) + prefix + slot.key ) ;
-	
-	if ( slot.left ) {
-		debugSlot( slot.left , level + 1 ) ;
-	}
-	
-	if ( slot.right ) {
-		debugSlot( slot.right , level + 1 ) ;
-	}
+	tree.debug() ;
 } ;
 
 
@@ -277,8 +257,8 @@ describe( "Binary Tree" , () => {
 
 	describe( "Advanced Array-like features" , () => {
 		
-		it( ".slots()" , () => {
-			var slots ;
+		it( ".nodes()" , () => {
+			var nodes ;
 			var tree ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -286,25 +266,25 @@ describe( "Binary Tree" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			slots = tree.slots() ;
-			expect( slots ).to.be.an( Array ) ;
-			expect( slots ).to.have.length( 3 ) ;
-			expect( slots.map( e => e.element ) ).to.equal( [ e1 , e2 , e3 ] ) ;
+			nodes = tree.nodes() ;
+			expect( nodes ).to.be.an( Array ) ;
+			expect( nodes ).to.have.length( 3 ) ;
+			expect( nodes.map( e => e.element ) ).to.equal( [ e1 , e2 , e3 ] ) ;
 			
 			tree = new BinaryTree() ;
-			slots = tree.slots() ;
-			expect( slots ).to.be.an( Array ) ;
-			expect( slots ).to.have.length( 0 ) ;
-			expect( slots.map( e => e.element ) ).to.equal( [] ) ;
+			nodes = tree.nodes() ;
+			expect( nodes ).to.be.an( Array ) ;
+			expect( nodes ).to.have.length( 0 ) ;
+			expect( nodes.map( e => e.element ) ).to.equal( [] ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e2 , e2 , e3 ) ;
-			slots = tree.slots() ;
-			expect( slots ).to.be.an( Array ) ;
-			expect( slots ).to.have.length( 5 ) ;
-			expect( slots.map( e => e.element ) ).to.equal( [ e1 , e2 , e2 , e2 , e3 ] ) ;
+			nodes = tree.nodes() ;
+			expect( nodes ).to.be.an( Array ) ;
+			expect( nodes ).to.have.length( 5 ) ;
+			expect( nodes.map( e => e.element ) ).to.equal( [ e1 , e2 , e2 , e2 , e3 ] ) ;
 		} ) ;
 		
-		it( ".slotOf()/.lastSlotOf()" , () => {
+		it( ".nodeOf()/.lastNodeOf()" , () => {
 			var tree ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -312,13 +292,13 @@ describe( "Binary Tree" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.slotOf( e2 ).element ).to.be( e2 ) ;
-			expect( tree.slotOf( e4 ) ).to.be( null ) ;
+			expect( tree.nodeOf( e2 ).element ).to.be( e2 ) ;
+			expect( tree.nodeOf( e4 ) ).to.be( null ) ;
 			
 			tree.push( e2 , e2 , e2 ) ;
-			tree.set( tree.slotOf( e2 ) , e4 ) ;
+			tree.set( tree.nodeOf( e2 ) , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ { v: 'jack' } , { v: 'bobby' } , { v: 'steve' } , { v: 'bob' } , { v: 'bob' } , { v: 'bob' } ] ) ;
-			tree.set( tree.lastSlotOf( e2 ) , e4 ) ;
+			tree.set( tree.lastNodeOf( e2 ) , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ { v: 'jack' } , { v: 'bobby' } , { v: 'steve' } , { v: 'bob' } , { v: 'bob' } , { v: 'bobby' } ] ) ;
 		} ) ;
 		
@@ -426,7 +406,7 @@ describe( "Binary Tree" , () => {
 			expect( tree.find( element => element.v === 'bob' ) ).to.be( e4 ) ;
 		} ) ;
 		
-		it( ".findSlot()" , () => {
+		it( ".findNode()" , () => {
 			var tree ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -434,15 +414,15 @@ describe( "Binary Tree" , () => {
 				e4 = { v: 'bob' } ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.get( tree.findSlot( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
-			expect( tree.findSlot( element => element.v === 'bobby' ) ).to.be( null ) ;
-			expect( tree.get( tree.findSlot( element => element.v === 'bobby' ) ) ).to.be( undefined ) ;
+			expect( tree.get( tree.findNode( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
+			expect( tree.findNode( element => element.v === 'bobby' ) ).to.be( null ) ;
+			expect( tree.get( tree.findNode( element => element.v === 'bobby' ) ) ).to.be( undefined ) ;
 			
 			tree.push( e4 ) ;
-			expect( tree.get( tree.findSlot( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
+			expect( tree.get( tree.findNode( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
 			
 			tree.unshift( e4 ) ;
-			expect( tree.get( tree.findSlot( element => element.v === 'bob' ) ) ).to.be( e4 ) ;
+			expect( tree.get( tree.findNode( element => element.v === 'bob' ) ) ).to.be( e4 ) ;
 		} ) ;
 		
 		it( ".map()" , () => {
@@ -551,7 +531,7 @@ describe( "Binary Tree" , () => {
 
 	describe( "Advanced custom features" , () => {
 		
-		it( ".removeSlot()/.deleteSlot()" , () => {
+		it( ".removeNode()/.deleteNode()" , () => {
 			var tree ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -559,27 +539,27 @@ describe( "Binary Tree" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			tree.removeSlot( tree.slotOf( e2 ) ) ;
+			tree.removeNode( tree.nodeOf( e2 ) ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree() ;
-			tree.removeSlot( tree.slotOf( e2 ) ) ;
+			tree.removeNode( tree.nodeOf( e2 ) ) ;
 			expect( [ ... tree ] ).to.equal( [] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e2 ) ;
-			tree.removeSlot( tree.slotOf( e2 ) ) ;
+			tree.removeNode( tree.nodeOf( e2 ) ) ;
 			expect( [ ... tree ] ).to.equal( [] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e2 , e1 , e3 ) ;
-			tree.removeSlot( tree.slotOf( e2 ) ) ;
+			tree.removeNode( tree.nodeOf( e2 ) ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e3 , e2 ) ;
-			tree.removeSlot( tree.slotOf( e2 ) ) ;
+			tree.removeNode( tree.nodeOf( e2 ) ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 ] ) ;
 			sanityCheck( tree ) ;
 		} ) ;
@@ -637,62 +617,62 @@ describe( "Binary Tree" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e1 ) , tree.slotOf( e1 ) ) ).to.be.false() ;
+			expect( tree.moveAfter( tree.nodeOf( e1 ) , tree.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e1 ) , tree.slotOf( e2 ) ) ).to.be.true() ;
+			expect( tree.moveAfter( tree.nodeOf( e1 ) , tree.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e1 ) , tree.slotOf( e3 ) ) ).to.be.true() ;
+			expect( tree.moveAfter( tree.nodeOf( e1 ) , tree.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e2 , e3 , e1 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveToTail( tree.slotOf( e1 ) ) ).to.be.true() ;
+			expect( tree.moveToTail( tree.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e2 , e3 , e1 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e2 ) , tree.slotOf( e1 ) ) ).to.be.false() ;
+			expect( tree.moveAfter( tree.nodeOf( e2 ) , tree.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e2 ) , tree.slotOf( e2 ) ) ).to.be.false() ;
+			expect( tree.moveAfter( tree.nodeOf( e2 ) , tree.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e2 ) , tree.slotOf( e3 ) ) ).to.be.true() ;
+			expect( tree.moveAfter( tree.nodeOf( e2 ) , tree.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveToTail( tree.slotOf( e2 ) ) ).to.be.true() ;
+			expect( tree.moveToTail( tree.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e3 ) , tree.slotOf( e1 ) ) ).to.be.true() ;
+			expect( tree.moveAfter( tree.nodeOf( e3 ) , tree.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e3 ) , tree.slotOf( e2 ) ) ).to.be.false() ;
+			expect( tree.moveAfter( tree.nodeOf( e3 ) , tree.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveAfter( tree.slotOf( e3 ) , tree.slotOf( e3 ) ) ).to.be.false() ;
+			expect( tree.moveAfter( tree.nodeOf( e3 ) , tree.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveToTail( tree.slotOf( e3 ) ) ).to.be.false() ;
+			expect( tree.moveToTail( tree.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 		} ) ;
@@ -705,62 +685,62 @@ describe( "Binary Tree" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e1 ) , tree.slotOf( e1 ) ) ).to.be.false() ;
+			expect( tree.moveBefore( tree.nodeOf( e1 ) , tree.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveToHead( tree.slotOf( e1 ) ) ).to.be.false() ;
+			expect( tree.moveToHead( tree.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e1 ) , tree.slotOf( e2 ) ) ).to.be.false() ;
+			expect( tree.moveBefore( tree.nodeOf( e1 ) , tree.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e1 ) , tree.slotOf( e3 ) ) ).to.be.true() ;
+			expect( tree.moveBefore( tree.nodeOf( e1 ) , tree.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e2 ) , tree.slotOf( e1 ) ) ).to.be.true() ;
+			expect( tree.moveBefore( tree.nodeOf( e2 ) , tree.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveToHead( tree.slotOf( e2 ) ) ).to.be.true() ;
+			expect( tree.moveToHead( tree.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e2 ) , tree.slotOf( e2 ) ) ).to.be.false() ;
+			expect( tree.moveBefore( tree.nodeOf( e2 ) , tree.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e2 ) , tree.slotOf( e3 ) ) ).to.be.false() ;
+			expect( tree.moveBefore( tree.nodeOf( e2 ) , tree.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e3 ) , tree.slotOf( e1 ) ) ).to.be.true() ;
+			expect( tree.moveBefore( tree.nodeOf( e3 ) , tree.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e3 , e1 , e2 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveToHead( tree.slotOf( e3 ) ) ).to.be.true() ;
+			expect( tree.moveToHead( tree.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e3 , e1 , e2 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e3 ) , tree.slotOf( e2 ) ) ).to.be.true() ;
+			expect( tree.moveBefore( tree.nodeOf( e3 ) , tree.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( tree ) ;
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
-			expect( tree.moveBefore( tree.slotOf( e3 ) , tree.slotOf( e3 ) ) ).to.be.false() ;
+			expect( tree.moveBefore( tree.nodeOf( e3 ) , tree.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 		} ) ;
@@ -774,19 +754,19 @@ describe( "Binary Tree" , () => {
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
 			
-			tree.insertAfter( tree.slotOf( e2 ) ) ;
+			tree.insertAfter( tree.nodeOf( e2 ) ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
-			tree.insertAfter( tree.slotOf( e2 ) , e4 ) ;
+			tree.insertAfter( tree.nodeOf( e2 ) , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e4 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
-			tree.insertAfter( tree.slotOf( e1 ) , e4 , e4 , e4 ) ;
+			tree.insertAfter( tree.nodeOf( e1 ) , e4 , e4 , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e4 , e4 , e4 , e2 , e4 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
-			tree.insertAfter( tree.slotOf( e3 ) , e4 ) ;
+			tree.insertAfter( tree.nodeOf( e3 ) , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e4 , e4 , e4 , e2 , e4 , e3 , e4 ] ) ;
 			sanityCheck( tree ) ;
 		} ) ;
@@ -800,19 +780,19 @@ describe( "Binary Tree" , () => {
 			
 			tree = new BinaryTree( e1 , e2 , e3 ) ;
 			
-			tree.insertBefore( tree.slotOf( e2 ) ) ;
+			tree.insertBefore( tree.nodeOf( e2 ) ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
-			tree.insertBefore( tree.slotOf( e2 ) , e4 ) ;
+			tree.insertBefore( tree.nodeOf( e2 ) , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e4 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
-			tree.insertBefore( tree.slotOf( e1 ) , e4 , e4 , e4 ) ;
+			tree.insertBefore( tree.nodeOf( e1 ) , e4 , e4 , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ e4 , e4 , e4 , e1 , e4 , e2 , e3 ] ) ;
 			sanityCheck( tree ) ;
 			
-			tree.insertBefore( tree.slotOf( e3 ) , e4 ) ;
+			tree.insertBefore( tree.nodeOf( e3 ) , e4 ) ;
 			expect( [ ... tree ] ).to.equal( [ e4 , e4 , e4 , e1 , e4 , e2 , e4 , e3 ] ) ;
 			sanityCheck( tree ) ;
 		} ) ;

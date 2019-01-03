@@ -39,23 +39,23 @@ const LinkedList = lib.LinkedList ;
 
 function sanityCheck( list ) {
 	var length = 0 ,
-		lastSlot = null ,
-		slot = list.head ;
+		lastNode = null ,
+		node = list.head ;
 	
-	while ( slot ) {
-		expect( slot.list ).to.be( list ) ;
-		expect( slot.previous ).to.be( lastSlot ) ;
+	while ( node ) {
+		expect( node.list ).to.be( list ) ;
+		expect( node.previous ).to.be( lastNode ) ;
 		
-		// Useless because we precisely come from that lastSlot
-		//if ( lastSlot ) { expect( lastSlot.next ).to.be( slot ) ; }
+		// Useless because we precisely come from that lastNode
+		//if ( lastNode ) { expect( lastNode.next ).to.be( node ) ; }
 		
 		length ++ ;
 		
-		lastSlot = slot ;
-		slot = slot.next ;
+		lastNode = node ;
+		node = node.next ;
 	}
 	
-	expect( list.tail ).to.be( lastSlot ) ;
+	expect( list.tail ).to.be( lastNode ) ;
 	expect( list.length ).to.be( length ) ;
 }
 
@@ -202,8 +202,8 @@ describe( "Linked List" , () => {
 
 	describe( "Advanced Array-like features" , () => {
 		
-		it( ".slots()" , () => {
-			var slots ;
+		it( ".nodes()" , () => {
+			var nodes ;
 			var list ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -211,25 +211,25 @@ describe( "Linked List" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			slots = list.slots() ;
-			expect( slots ).to.be.an( Array ) ;
-			expect( slots ).to.have.length( 3 ) ;
-			expect( slots.map( e => e.element ) ).to.equal( [ e1 , e2 , e3 ] ) ;
+			nodes = list.nodes() ;
+			expect( nodes ).to.be.an( Array ) ;
+			expect( nodes ).to.have.length( 3 ) ;
+			expect( nodes.map( e => e.element ) ).to.equal( [ e1 , e2 , e3 ] ) ;
 			
 			list = new LinkedList() ;
-			slots = list.slots() ;
-			expect( slots ).to.be.an( Array ) ;
-			expect( slots ).to.have.length( 0 ) ;
-			expect( slots.map( e => e.element ) ).to.equal( [] ) ;
+			nodes = list.nodes() ;
+			expect( nodes ).to.be.an( Array ) ;
+			expect( nodes ).to.have.length( 0 ) ;
+			expect( nodes.map( e => e.element ) ).to.equal( [] ) ;
 			
 			list = new LinkedList( e1 , e2 , e2 , e2 , e3 ) ;
-			slots = list.slots() ;
-			expect( slots ).to.be.an( Array ) ;
-			expect( slots ).to.have.length( 5 ) ;
-			expect( slots.map( e => e.element ) ).to.equal( [ e1 , e2 , e2 , e2 , e3 ] ) ;
+			nodes = list.nodes() ;
+			expect( nodes ).to.be.an( Array ) ;
+			expect( nodes ).to.have.length( 5 ) ;
+			expect( nodes.map( e => e.element ) ).to.equal( [ e1 , e2 , e2 , e2 , e3 ] ) ;
 		} ) ;
 		
-		it( ".slotOf()/.lastSlotOf()" , () => {
+		it( ".nodeOf()/.lastNodeOf()" , () => {
 			var list ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -237,13 +237,13 @@ describe( "Linked List" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.slotOf( e2 ).element ).to.be( e2 ) ;
-			expect( list.slotOf( e4 ) ).to.be( null ) ;
+			expect( list.nodeOf( e2 ).element ).to.be( e2 ) ;
+			expect( list.nodeOf( e4 ) ).to.be( null ) ;
 			
 			list.push( e2 , e2 , e2 ) ;
-			list.set( list.slotOf( e2 ) , e4 ) ;
+			list.set( list.nodeOf( e2 ) , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ { v: 'jack' } , { v: 'bobby' } , { v: 'steve' } , { v: 'bob' } , { v: 'bob' } , { v: 'bob' } ] ) ;
-			list.set( list.lastSlotOf( e2 ) , e4 ) ;
+			list.set( list.lastNodeOf( e2 ) , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ { v: 'jack' } , { v: 'bobby' } , { v: 'steve' } , { v: 'bob' } , { v: 'bob' } , { v: 'bobby' } ] ) ;
 		} ) ;
 		
@@ -351,7 +351,7 @@ describe( "Linked List" , () => {
 			expect( list.find( element => element.v === 'bob' ) ).to.be( e4 ) ;
 		} ) ;
 		
-		it( ".findSlot()" , () => {
+		it( ".findNode()" , () => {
 			var list ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -359,15 +359,15 @@ describe( "Linked List" , () => {
 				e4 = { v: 'bob' } ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.get( list.findSlot( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
-			expect( list.findSlot( element => element.v === 'bobby' ) ).to.be( null ) ;
-			expect( list.get( list.findSlot( element => element.v === 'bobby' ) ) ).to.be( undefined ) ;
+			expect( list.get( list.findNode( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
+			expect( list.findNode( element => element.v === 'bobby' ) ).to.be( null ) ;
+			expect( list.get( list.findNode( element => element.v === 'bobby' ) ) ).to.be( undefined ) ;
 			
 			list.push( e4 ) ;
-			expect( list.get( list.findSlot( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
+			expect( list.get( list.findNode( element => element.v === 'bob' ) ) ).to.be( e2 ) ;
 			
 			list.unshift( e4 ) ;
-			expect( list.get( list.findSlot( element => element.v === 'bob' ) ) ).to.be( e4 ) ;
+			expect( list.get( list.findNode( element => element.v === 'bob' ) ) ).to.be( e4 ) ;
 		} ) ;
 		
 		it( ".map()" , () => {
@@ -476,7 +476,7 @@ describe( "Linked List" , () => {
 
 	describe( "Advanced custom features" , () => {
 		
-		it( ".removeSlot()/.deleteSlot()" , () => {
+		it( ".removeNode()/.deleteNode()" , () => {
 			var list ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -484,27 +484,27 @@ describe( "Linked List" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			list.removeSlot( list.slotOf( e2 ) ) ;
+			list.removeNode( list.nodeOf( e2 ) ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList() ;
-			list.removeSlot( list.slotOf( e2 ) ) ;
+			list.removeNode( list.nodeOf( e2 ) ) ;
 			expect( [ ... list ] ).to.equal( [] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e2 ) ;
-			list.removeSlot( list.slotOf( e2 ) ) ;
+			list.removeNode( list.nodeOf( e2 ) ) ;
 			expect( [ ... list ] ).to.equal( [] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e2 , e1 , e3 ) ;
-			list.removeSlot( list.slotOf( e2 ) ) ;
+			list.removeNode( list.nodeOf( e2 ) ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e3 , e2 ) ;
-			list.removeSlot( list.slotOf( e2 ) ) ;
+			list.removeNode( list.nodeOf( e2 ) ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e3 ] ) ;
 			sanityCheck( list ) ;
 		} ) ;
@@ -562,62 +562,62 @@ describe( "Linked List" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e1 ) , list.slotOf( e1 ) ) ).to.be.false() ;
+			expect( list.moveAfter( list.nodeOf( e1 ) , list.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e1 ) , list.slotOf( e2 ) ) ).to.be.true() ;
+			expect( list.moveAfter( list.nodeOf( e1 ) , list.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e1 ) , list.slotOf( e3 ) ) ).to.be.true() ;
+			expect( list.moveAfter( list.nodeOf( e1 ) , list.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e2 , e3 , e1 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveToTail( list.slotOf( e1 ) ) ).to.be.true() ;
+			expect( list.moveToTail( list.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e2 , e3 , e1 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e2 ) , list.slotOf( e1 ) ) ).to.be.false() ;
+			expect( list.moveAfter( list.nodeOf( e2 ) , list.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e2 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+			expect( list.moveAfter( list.nodeOf( e2 ) , list.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e2 ) , list.slotOf( e3 ) ) ).to.be.true() ;
+			expect( list.moveAfter( list.nodeOf( e2 ) , list.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveToTail( list.slotOf( e2 ) ) ).to.be.true() ;
+			expect( list.moveToTail( list.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e3 ) , list.slotOf( e1 ) ) ).to.be.true() ;
+			expect( list.moveAfter( list.nodeOf( e3 ) , list.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e3 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+			expect( list.moveAfter( list.nodeOf( e3 ) , list.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveAfter( list.slotOf( e3 ) , list.slotOf( e3 ) ) ).to.be.false() ;
+			expect( list.moveAfter( list.nodeOf( e3 ) , list.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveToTail( list.slotOf( e3 ) ) ).to.be.false() ;
+			expect( list.moveToTail( list.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 		} ) ;
@@ -630,62 +630,62 @@ describe( "Linked List" , () => {
 				e4 = { v: 'bobby' } ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e1 ) , list.slotOf( e1 ) ) ).to.be.false() ;
+			expect( list.moveBefore( list.nodeOf( e1 ) , list.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveToHead( list.slotOf( e1 ) ) ).to.be.false() ;
+			expect( list.moveToHead( list.nodeOf( e1 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e1 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+			expect( list.moveBefore( list.nodeOf( e1 ) , list.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e1 ) , list.slotOf( e3 ) ) ).to.be.true() ;
+			expect( list.moveBefore( list.nodeOf( e1 ) , list.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e2 ) , list.slotOf( e1 ) ) ).to.be.true() ;
+			expect( list.moveBefore( list.nodeOf( e2 ) , list.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveToHead( list.slotOf( e2 ) ) ).to.be.true() ;
+			expect( list.moveToHead( list.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e2 , e1 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e2 ) , list.slotOf( e2 ) ) ).to.be.false() ;
+			expect( list.moveBefore( list.nodeOf( e2 ) , list.nodeOf( e2 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e2 ) , list.slotOf( e3 ) ) ).to.be.false() ;
+			expect( list.moveBefore( list.nodeOf( e2 ) , list.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e3 ) , list.slotOf( e1 ) ) ).to.be.true() ;
+			expect( list.moveBefore( list.nodeOf( e3 ) , list.nodeOf( e1 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e3 , e1 , e2 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveToHead( list.slotOf( e3 ) ) ).to.be.true() ;
+			expect( list.moveToHead( list.nodeOf( e3 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e3 , e1 , e2 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e3 ) , list.slotOf( e2 ) ) ).to.be.true() ;
+			expect( list.moveBefore( list.nodeOf( e3 ) , list.nodeOf( e2 ) ) ).to.be.true() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e3 , e2 ] ) ;
 			sanityCheck( list ) ;
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
-			expect( list.moveBefore( list.slotOf( e3 ) , list.slotOf( e3 ) ) ).to.be.false() ;
+			expect( list.moveBefore( list.nodeOf( e3 ) , list.nodeOf( e3 ) ) ).to.be.false() ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 		} ) ;
@@ -699,19 +699,19 @@ describe( "Linked List" , () => {
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
 			
-			list.insertAfter( list.slotOf( e2 ) ) ;
+			list.insertAfter( list.nodeOf( e2 ) ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
-			list.insertAfter( list.slotOf( e2 ) , e4 ) ;
+			list.insertAfter( list.nodeOf( e2 ) , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e4 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
-			list.insertAfter( list.slotOf( e1 ) , e4 , e4 , e4 ) ;
+			list.insertAfter( list.nodeOf( e1 ) , e4 , e4 , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e4 , e4 , e4 , e2 , e4 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
-			list.insertAfter( list.slotOf( e3 ) , e4 ) ;
+			list.insertAfter( list.nodeOf( e3 ) , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e4 , e4 , e4 , e2 , e4 , e3 , e4 ] ) ;
 			sanityCheck( list ) ;
 		} ) ;
@@ -725,19 +725,19 @@ describe( "Linked List" , () => {
 			
 			list = new LinkedList( e1 , e2 , e3 ) ;
 			
-			list.insertBefore( list.slotOf( e2 ) ) ;
+			list.insertBefore( list.nodeOf( e2 ) ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
-			list.insertBefore( list.slotOf( e2 ) , e4 ) ;
+			list.insertBefore( list.nodeOf( e2 ) , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ e1 , e4 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
-			list.insertBefore( list.slotOf( e1 ) , e4 , e4 , e4 ) ;
+			list.insertBefore( list.nodeOf( e1 ) , e4 , e4 , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ e4 , e4 , e4 , e1 , e4 , e2 , e3 ] ) ;
 			sanityCheck( list ) ;
 			
-			list.insertBefore( list.slotOf( e3 ) , e4 ) ;
+			list.insertBefore( list.nodeOf( e3 ) , e4 ) ;
 			expect( [ ... list ] ).to.equal( [ e4 , e4 , e4 , e1 , e4 , e2 , e4 , e3 ] ) ;
 			sanityCheck( list ) ;
 		} ) ;
