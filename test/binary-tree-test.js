@@ -81,28 +81,36 @@ describe( "Binary Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
 		} ) ;
 		
-		it( ".insert()" , () => {
+		it( ".values(), .keys() and iterator" , () => {
 			var tree ;
 			
 			tree = new BinaryTree() ;
-			expect( tree ).to.have.length( 0 ) ;
 			
-			tree.insert( 'bob' ) ;
-			tree.insert( 'bill' ) ;
-			tree.insert( 'jack' , 'jean' , 'steve' ) ;
-			expect( [ ... tree ] ).to.equal( [ 'bob' , 'bill' , 'jack' , 'jean' , 'steve' ] ) ;
-			tree.sanityCheck() ;
-			
-			tree = new BinaryTree() ;
-			tree.insert( 'jack' , 'jean' , 'steve' ) ;
-			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
-			tree.sanityCheck() ;
+			tree.set( 3 , 'jack' ) ;
+			tree.set( 2 , 'jean' ) ;
+			tree.set( 5 , 'steve' ) ;
+			tree.set( 2.5 , 'john' ) ;
+			tree.set( 2.7 , 'robert' ) ;
+			tree.set( 2.8 , 'johnson' ) ;
+			tree.set( 2.75 , 'boris' ) ;
+			tree.set( 6 , 'bobby' ) ;
+			tree.set( 2.85 , 'carl' ) ;
+			tree.set( 2.72 , 'tom' ) ;
+			tree.set( 2.76 , 'roger' ) ;
+			tree.set( 2.77 , 'vlad' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.keys() ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			expect( [ ... tree.values() ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
 		} ) ;
 		
 		it( "set and get elements" , () => {
 			var tree ;
 			
 			tree = new BinaryTree() ;
+			
+			// Try getting unexisting keys
+			expect( tree.get( 0 ) ).to.be( undefined ) ;
+			expect( tree.get( 9 ) ).to.be( undefined ) ;
 			
 			tree.set( 3 , 'jack' ) ;
 			expect( [ ... tree ] ).to.equal( [ 'jack' ] ) ;
@@ -148,16 +156,88 @@ describe( "Binary Tree" , () => {
 			
 			tree.debug() ;
 
-			expect( tree.get( 3 ) ).to.equal( 'jack' ) ;
-			expect( tree.get( 2 ) ).to.equal( 'jean' ) ;
-			expect( tree.get( 5 ) ).to.equal( 'steve' ) ;
-			expect( tree.get( 2.5 ) ).to.equal( 'john' ) ;
-			expect( tree.get( 2.7 ) ).to.equal( 'robert' ) ;
-			expect( tree.get( 2.8 ) ).to.equal( 'johnson' ) ;
-			expect( tree.get( 2.75 ) ).to.equal( 'boris' ) ;
-			expect( tree.get( 6 ) ).to.equal( 'bobby' ) ;
-			expect( tree.get( 2.85 ) ).to.equal( 'carl' ) ;
-			expect( tree.get( 2.72 ) ).to.equal( 'tom' ) ;
+			expect( tree.get( 3 ) ).to.be( 'jack' ) ;
+			expect( tree.get( 2 ) ).to.be( 'jean' ) ;
+			expect( tree.get( 5 ) ).to.be( 'steve' ) ;
+			expect( tree.get( 2.5 ) ).to.be( 'john' ) ;
+			expect( tree.get( 2.7 ) ).to.be( 'robert' ) ;
+			expect( tree.get( 2.8 ) ).to.be( 'johnson' ) ;
+			expect( tree.get( 2.75 ) ).to.be( 'boris' ) ;
+			expect( tree.get( 6 ) ).to.be( 'bobby' ) ;
+			expect( tree.get( 2.85 ) ).to.be( 'carl' ) ;
+			expect( tree.get( 2.72 ) ).to.be( 'tom' ) ;
+
+			// Try getting unexisting keys
+			expect( tree.get( 0 ) ).to.be( undefined ) ;
+			expect( tree.get( 9 ) ).to.be( undefined ) ;
+		} ) ;
+		
+		it( ".insert()" , () => {
+			var tree ;
+			
+			tree = new BinaryTree() ;
+			expect( tree ).to.have.length( 0 ) ;
+			
+			tree.insert( 'bob' ) ;
+			tree.insert( 'bill' ) ;
+			tree.insert( 'jack' , 'jean' , 'steve' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'bob' , 'bill' , 'jack' , 'jean' , 'steve' ] ) ;
+			tree.sanityCheck() ;
+			
+			tree = new BinaryTree() ;
+			tree.insert( 'jack' , 'jean' , 'steve' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
+			tree.sanityCheck() ;
+		} ) ;
+		
+		it( "delete by key" , () => {
+			var tree ;
+			
+			tree = new BinaryTree() ;
+			
+			tree.set( 3 , 'jack' ) ;
+			tree.set( 2 , 'jean' ) ;
+			tree.set( 5 , 'steve' ) ;
+			tree.set( 2.5 , 'john' ) ;
+			tree.set( 2.7 , 'robert' ) ;
+			tree.set( 2.8 , 'johnson' ) ;
+			tree.set( 2.75 , 'boris' ) ;
+			tree.set( 6 , 'bobby' ) ;
+			tree.set( 2.85 , 'carl' ) ;
+			tree.set( 2.72 , 'tom' ) ;
+			tree.set( 2.76 , 'roger' ) ;
+			tree.set( 2.77 , 'vlad' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
+			tree.sanityCheck() ;
+			
+			console.log( '\n\nTree:' ) ;
+			tree.debug() ;
+			
+			// Delete a leaf and force a left-right heavy
+			tree.delete( 2.85 ) ;
+			tree.sanityCheck() ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.get( 2.85 ) ).to.be( undefined ) ;
+			
+			// Delete a node with only one child
+			tree.delete( 2.5 ) ;
+			tree.sanityCheck() ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.get( 2.5 ) ).to.be( undefined ) ;
+			
+			// Delete a node with only two children that are not leaves
+			tree.delete( 2.8 ) ;
+			tree.sanityCheck() ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.get( 2.8 ) ).to.be( undefined ) ;
+			
+			// Delete the trunc node, the tree should replace the trunc node, it also cause a right heavy
+			tree.delete( 2.75 ) ;
+			tree.sanityCheck() ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'robert' , 'tom' , 'roger' , 'vlad' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.get( 2.75 ) ).to.be( undefined ) ;
+			
+			tree.debug() ;
 		} ) ;
 		
 		return ;
