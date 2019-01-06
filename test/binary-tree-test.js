@@ -222,6 +222,22 @@ describe( "Binary Tree" , () => {
 			var tree ;
 			
 			tree = new BinaryTree() ;
+			tree.set( 3 , 'jack' ) ;
+			tree.delete( 3 ) ;
+			expect( [ ... tree ] ).to.equal( [] ) ;
+			tree.sanityCheck() ;
+			
+			tree = new BinaryTree() ;
+			tree.set( 3 , 'jack' ) ;
+			tree.set( 2 , 'jean' ) ;
+			tree.delete( 3 ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' ] ) ;
+			tree.sanityCheck() ;
+			tree.delete( 2 ) ;
+			expect( [ ... tree ] ).to.equal( [] ) ;
+			tree.sanityCheck() ;
+			
+			tree = new BinaryTree() ;
 			
 			tree.set( 3 , 'jack' ) ;
 			tree.set( 2 , 'jean' ) ;
@@ -474,15 +490,7 @@ describe( "Binary Tree" , () => {
 			array = new BinaryTree( null , e1 , e2 , e3 ).filter( element => element.v.length < 4 ) ;
 			expect( array ).to.equal( [ e2 ] ) ;
 		} ) ;
-		
-		it( "missing .concat()" ) ;
-		it( "missing .copyWithin()" ) ;
-		it( "missing .slice()" ) ;
-		it( "missing .splice()" ) ;
-		it( "missing .sort()" ) ;
 	} ) ;
-
-
 
 	describe( "Advanced custom features" , () => {
 		
