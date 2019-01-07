@@ -576,7 +576,32 @@ describe( "Binary Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [ e2 ] ) ;
 			tree.sanityCheck() ;
 		} ) ;
-	} ) ;
 
+		it( ".deleteBeforeKey()" , () => {
+			var tree ;
+			
+			tree = new BinaryTree() ;
+			
+			tree.set( 3 , 'jack' ) ;
+			tree.set( 2 , 'jean' ) ;
+			tree.set( 5 , 'steve' ) ;
+			tree.set( 2.5 , 'john' ) ;
+			tree.set( 2.7 , 'robert' ) ;
+			tree.set( 2.8 , 'johnson' ) ;
+			tree.set( 2.75 , 'boris' ) ;
+			tree.set( 6 , 'bobby' ) ;
+			tree.set( 2.85 , 'carl' ) ;
+			tree.set( 2.72 , 'tom' ) ;
+			tree.set( 2.76 , 'roger' ) ;
+			tree.set( 2.77 , 'vlad' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
+			
+			console.log( "Tree before delete:" ) ;
+			tree.debug() ;
+
+			console.log( "Tree before delete:" ) ;
+			tree.debug() ;
+		} ) ;
+	} ) ;
 } ) ;
 
