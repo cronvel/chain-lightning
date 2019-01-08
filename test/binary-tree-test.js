@@ -577,11 +577,49 @@ describe( "Binary Tree" , () => {
 			tree.sanityCheck() ;
 		} ) ;
 
+
 		it( ".truncateBefore()" , () => {
 			var tree ;
 			
-			tree = new BinaryTree() ;
+			var reset = () => {
+				tree = new BinaryTree() ;
+				tree.set( 3 , 'jack' ) ;
+				tree.set( 2 , 'jean' ) ;
+				tree.set( 5 , 'steve' ) ;
+				tree.set( 2.5 , 'john' ) ;
+				tree.set( 2.7 , 'robert' ) ;
+				tree.set( 2.8 , 'johnson' ) ;
+				tree.set( 2.75 , 'boris' ) ;
+				tree.set( 6 , 'bobby' ) ;
+				tree.set( 2.85 , 'carl' ) ;
+				tree.set( 2.72 , 'tom' ) ;
+				tree.set( 2.76 , 'roger' ) ;
+				tree.set( 2.77 , 'vlad' ) ;
+			} ;
 			
+			reset() ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			console.log( "Tree before truncate:" ) ;
+			tree.debug() ;
+			tree.truncateBefore( 2.72 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			console.log( "----------------------------------------------------------------------------------" ) ;
+			tree.truncateBefore( 2.72 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+		} ) ;
+	} ) ;
+	
+	describe( "Internal methods" , () => {
+		it( ".getClosestNode()" , () => {
+			var tree  = new BinaryTree() ;
 			tree.set( 3 , 'jack' ) ;
 			tree.set( 2 , 'jean' ) ;
 			tree.set( 5 , 'steve' ) ;
@@ -594,15 +632,36 @@ describe( "Binary Tree" , () => {
 			tree.set( 2.72 , 'tom' ) ;
 			tree.set( 2.76 , 'roger' ) ;
 			tree.set( 2.77 , 'vlad' ) ;
-			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
 			
-			console.log( "Tree before truncate:" ) ;
-			tree.debug() ;
-			
-			tree.truncateBefore( 2.72 , true ) ;
+			// Including existing
+			expect( tree.getClosestNode( 2 , false , -1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2 , false , 1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.72 , false , -1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.72 , false , 1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.8 , false , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.8 , false , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.85 , false , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.85 , false , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 6 , false , -1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 6 , false , 1 ).key ).to.be( 6 ) ;
 
-			console.log( "Tree after truncate:" ) ;
+			// Excluding existing
+			expect( tree.getClosestNode( 2 , true , -1 ) ).to.be( null ) ;
+			expect( tree.getClosestNode( 2 , true , 1 ).key ).to.be( 2.5 ) ;
 			tree.debug() ;
+			console.log( "*****************" ) ;
+			expect( tree.getClosestNode( 2.72 , true , -1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.72 , true , 1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.8 , true , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.8 , true , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.85 , true , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.85 , true , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 6 , true , -1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 6 , true , 1 ).key ).to.be( 6 ) ;
+
+			// Including unexisting
+			// Excluding unexisting
+			
 		} ) ;
 	} ) ;
 } ) ;
