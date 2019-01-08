@@ -577,7 +577,6 @@ describe( "Binary Tree" , () => {
 			tree.sanityCheck() ;
 		} ) ;
 
-
 		it( ".truncateBefore()" , () => {
 			var tree ;
 			
@@ -598,9 +597,34 @@ describe( "Binary Tree" , () => {
 			} ;
 			
 			reset() ;
+			tree.truncateBefore( 1 , true ) ;
 			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
-			console.log( "Tree before truncate:" ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
 			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 1 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+			
+			reset() ;
+			tree.truncateBefore( 2 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+			
+			reset() ;
 			tree.truncateBefore( 2.72 , true ) ;
 			expect( [ ... tree.keys() ] ).to.equal( [ 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
 			tree.sanityCheck( true ) ;
@@ -608,9 +632,294 @@ describe( "Binary Tree" , () => {
 			tree.debug() ;
 
 			reset() ;
-			console.log( "----------------------------------------------------------------------------------" ) ;
 			tree.truncateBefore( 2.72 ) ;
 			expect( [ ... tree.keys() ] ).to.equal( [ 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.73 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.73 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.8 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.8 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.85 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.85 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.9 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 2.9 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 4 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 4 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 5 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 5 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 6 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 6 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 7 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateBefore( 7 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+		} ) ;
+	
+		it( ".truncateAfter()" , () => {
+			var tree ;
+			
+			var reset = () => {
+				tree = new BinaryTree() ;
+				tree.set( 3 , 'jack' ) ;
+				tree.set( 2 , 'jean' ) ;
+				tree.set( 5 , 'steve' ) ;
+				tree.set( 2.5 , 'john' ) ;
+				tree.set( 2.7 , 'robert' ) ;
+				tree.set( 2.8 , 'johnson' ) ;
+				tree.set( 2.75 , 'boris' ) ;
+				tree.set( 6 , 'bobby' ) ;
+				tree.set( 2.85 , 'carl' ) ;
+				tree.set( 2.72 , 'tom' ) ;
+				tree.set( 2.76 , 'roger' ) ;
+				tree.set( 2.77 , 'vlad' ) ;
+			} ;
+			
+			reset() ;
+			tree.truncateAfter( 1 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [] ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 1 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [] ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+			
+			reset() ;
+			tree.truncateAfter( 2 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [] ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 ] ) ;
+			tree.sanityCheck() ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+			
+			reset() ;
+			tree.truncateAfter( 2.72 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.72 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.73 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.73 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.8 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.8 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.85 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.85 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.9 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 2.9 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 4 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 4 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 5 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 5 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 6 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 6 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 7 , true ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
+			tree.sanityCheck( true ) ;
+			console.log( "Tree after truncate:" ) ;
+			tree.debug() ;
+
+			reset() ;
+			tree.truncateAfter( 7 ) ;
+			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
 			tree.sanityCheck( true ) ;
 			console.log( "Tree after truncate:" ) ;
 			tree.debug() ;
@@ -633,6 +942,8 @@ describe( "Binary Tree" , () => {
 			tree.set( 2.76 , 'roger' ) ;
 			tree.set( 2.77 , 'vlad' ) ;
 			
+			tree.debug() ;
+			
 			// Including existing
 			expect( tree.getClosestNode( 2 , false , -1 ).key ).to.be( 2 ) ;
 			expect( tree.getClosestNode( 2 , false , 1 ).key ).to.be( 2 ) ;
@@ -648,20 +959,78 @@ describe( "Binary Tree" , () => {
 			// Excluding existing
 			expect( tree.getClosestNode( 2 , true , -1 ) ).to.be( null ) ;
 			expect( tree.getClosestNode( 2 , true , 1 ).key ).to.be( 2.5 ) ;
-			tree.debug() ;
-			console.log( "*****************" ) ;
+			expect( tree.getClosestNode( 2.5 , true , -1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.5 , true , 1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.7 , true , -1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.7 , true , 1 ).key ).to.be( 2.72 ) ;
 			expect( tree.getClosestNode( 2.72 , true , -1 ).key ).to.be( 2.7 ) ;
 			expect( tree.getClosestNode( 2.72 , true , 1 ).key ).to.be( 2.75 ) ;
-			expect( tree.getClosestNode( 2.8 , true , -1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.8 , true , 1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.85 , true , -1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 2.85 , true , 1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 6 , true , -1 ).key ).to.be( 6 ) ;
-			expect( tree.getClosestNode( 6 , true , 1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 2.75 , true , -1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.75 , true , 1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.76 , true , -1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.76 , true , 1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.77 , true , -1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.77 , true , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.8 , true , -1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.8 , true , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.85 , true , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.85 , true , 1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 3 , true , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 3 , true , 1 ).key ).to.be( 5 ) ;
+			expect( tree.getClosestNode( 6 , true , -1 ).key ).to.be( 5 ) ;
+			expect( tree.getClosestNode( 6 , true , 1 ) ).to.be( null ) ;
 
 			// Including unexisting
-			// Excluding unexisting
+			expect( tree.getClosestNode( 1 , false , -1 ) ).to.be( null ) ;
+			expect( tree.getClosestNode( 1 , false , 1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.1 , false , -1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.1 , false , 1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.6 , false , -1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.6 , false , 1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.71 , false , -1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.71 , false , 1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.73 , false , -1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.73 , false , 1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.755 , false , -1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.755 , false , 1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.765 , false , -1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.765 , false , 1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.78 , false , -1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.78 , false , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.84 , false , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.84 , false , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.9 , false , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.9 , false , 1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 4 , false , -1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 4 , false , 1 ).key ).to.be( 5 ) ;
+			expect( tree.getClosestNode( 7 , false , -1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 7 , false , 1 ) ).to.be( null ) ;
 			
+			// Excluding unexisting -- should be identical to 'including unexisting'
+			expect( tree.getClosestNode( 1 , true , -1 ) ).to.be( null ) ;
+			expect( tree.getClosestNode( 1 , true , 1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.1 , true , -1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.1 , true , 1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.6 , true , -1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.6 , true , 1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.71 , true , -1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.71 , true , 1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.73 , true , -1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.73 , true , 1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.755 , true , -1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.755 , true , 1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.765 , true , -1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.765 , true , 1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.78 , true , -1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.78 , true , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.84 , true , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.84 , true , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.9 , true , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.9 , true , 1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 4 , true , -1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 4 , true , 1 ).key ).to.be( 5 ) ;
+			expect( tree.getClosestNode( 7 , true , -1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 7 , true , 1 ) ).to.be( null ) ;
 		} ) ;
 	} ) ;
 } ) ;
