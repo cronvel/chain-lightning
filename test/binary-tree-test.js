@@ -927,6 +927,35 @@ describe( "Binary Tree" , () => {
 	} ) ;
 	
 	describe( "Internal methods" , () => {
+
+		it( ".insertOrdered()" , () => {
+			var tree ;
+			
+			tree = new BinaryTree() ;
+			tree.insertOrdered( 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' ] ) ;
+			tree.sanityCheck() ;
+			tree.debug() ;
+
+			tree = new BinaryTree() ;
+			tree.insertOrdered( 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' , 'jacky' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' , 'jacky' ] ) ;
+			tree.sanityCheck() ;
+			tree.debug() ;
+
+			tree = new BinaryTree() ;
+			tree.insertOrdered( 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' , 'jacky' , 'stephen' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' , 'jacky' , 'stephen' ] ) ;
+			tree.sanityCheck() ;
+			tree.debug() ;
+
+			tree = new BinaryTree() ;
+			tree.insertOrdered( 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' , 'jacky' , 'stephen' , 'jörgl' , 'edmund' , 'karl' , 'roberto' , 'juan' , 'augustus' , 'edward' , 'leon' , 'sergio' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' , 'bob' , 'joe' , 'russel' , 'marco' , 'jacky' , 'stephen' , 'jörgl' , 'edmund' , 'karl' , 'roberto' , 'juan' , 'augustus' , 'edward' , 'leon' , 'sergio' ] ) ;
+			tree.sanityCheck() ;
+			tree.debug() ;
+		} ) ;
+		
 		it( ".getClosestNode()" , () => {
 			var tree  = new BinaryTree() ;
 			tree.set( 3 , 'jack' ) ;
