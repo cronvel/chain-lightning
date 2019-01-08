@@ -577,7 +577,7 @@ describe( "Binary Tree" , () => {
 			tree.sanityCheck() ;
 		} ) ;
 
-		it( ".deleteBeforeKey()" , () => {
+		it( ".truncateBefore()" , () => {
 			var tree ;
 			
 			tree = new BinaryTree() ;
@@ -596,10 +596,12 @@ describe( "Binary Tree" , () => {
 			tree.set( 2.77 , 'vlad' ) ;
 			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
 			
-			console.log( "Tree before delete:" ) ;
+			console.log( "Tree before truncate:" ) ;
 			tree.debug() ;
+			
+			tree.truncateBefore( 2.72 , true ) ;
 
-			console.log( "Tree before delete:" ) ;
+			console.log( "Tree after truncate:" ) ;
 			tree.debug() ;
 		} ) ;
 	} ) ;
