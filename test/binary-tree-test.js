@@ -84,7 +84,7 @@ describe( "Binary Tree" , () => {
 		it( ".values(), .keys() and iterator" , () => {
 			var tree ;
 			
-			tree = new BinaryTree() ;
+			tree = new BinaryTree( { stack: true } ) ;
 			
 			tree.set( 3 , 'jack' ) ;
 			tree.set( 2 , 'jean' ) ;
@@ -98,9 +98,10 @@ describe( "Binary Tree" , () => {
 			tree.set( 2.72 , 'tom' ) ;
 			tree.set( 2.76 , 'roger' ) ;
 			tree.set( 2.77 , 'vlad' ) ;
-			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
+			tree.add( 6 , 'bob' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' , 'bob' ] ) ;
 			expect( tree.keys() ).to.equal( [ 2 , 2.5 , 2.7 , 2.72 , 2.75 , 2.76 , 2.77 , 2.8 , 2.85 , 3 , 5 , 6 ] ) ;
-			expect( [ ... tree.values() ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( [ ... tree.values() ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'tom' , 'boris' , 'roger' , 'vlad' , 'johnson' , 'carl' , 'jack' , 'steve' , 'bobby' , 'bob' ] ) ;
 		} ) ;
 		
 		it( "set and get elements" , () => {
@@ -172,32 +173,60 @@ describe( "Binary Tree" , () => {
 			expect( tree.get( 9 ) ).to.be( undefined ) ;
 		} ) ;
 		
-		it( "duplicated keys and the 'uniqueKeys' option" , () => {
+		it( "add and get elements in conjunction with the 'stack' option" , () => {
 			var tree ;
 			
-			tree = new BinaryTree() ;
+			tree = new BinaryTree( { stack: true } ) ;
 			
-			// Without uniqueKeys
-			tree.set( 2 , 'jean' ) ;
-			tree.set( 3 , 'jack' ) ;
+			// Try getting unexisting keys
+			expect( tree.get( 0 ) ).to.be( undefined ) ;
+			expect( tree.get( 9 ) ).to.be( undefined ) ;
+			
+			tree.add( 3 , 'jack' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jack' ] ) ;
+			tree.sanityCheck() ;
+			
+			tree.add( 2 , 'jean' ) ;
 			expect( [ ... tree ] ).to.equal( [ 'jean' , 'jack' ] ) ;
-			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 3 ] ) ;
 			tree.sanityCheck() ;
 			
-			tree.set( 2 , 'bob' ) ;
-			expect( [ ... tree ] ).to.equal( [ 'jean' , 'bob' , 'jack' ] ) ;
-			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 2 , 3 ] ) ;
+			tree.add( 5 , 'steve' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'jack' , 'steve' ] ) ;
 			tree.sanityCheck() ;
+			
+			tree.add( 2.5 , 'john' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'jack' , 'steve' ] ) ;
+			tree.sanityCheck() ;
+			
+			tree.add( 2.7 , 'robert' ) ;
+			expect( [ ... tree ] ).to.equal( [ 'jean' , 'john' , 'robert' , 'jack' , 'steve' ] ) ;
+			tree.sanityCheck() ;
+			
+			tree.add( 3 , 'bobby' ) ;
+			expect( [ ... tree ] ).to.be.like( [ 'jean' , 'john' , 'robert' , 'jack' , 'bobby' , 'steve' ] ) ;
+			tree.sanityCheck() ;
+			
+			tree.add( 2 , 'jeanjean' ) ;
+			expect( [ ... tree ] ).to.be.like( [ 'jean' , 'jeanjean' , 'john' , 'robert' , 'jack' , 'bobby' , 'steve' ] ) ;
+			tree.sanityCheck() ;
+			
+			tree.add( 2 , 'jeanjeanjean' ) ;
+			expect( [ ... tree ] ).to.be.like( [ 'jean' , 'jeanjean' , 'jeanjeanjean' , 'john' , 'robert' , 'jack' , 'bobby' , 'steve' ] ) ;
+			tree.sanityCheck() ;
+			
+			//tree.debug() ;
 
-			// With uniqueKeys
-			tree = new BinaryTree( { uniqueKeys: true } ) ;
-			
-			tree.set( 2 , 'jean' ) ;
-			tree.set( 3 , 'jack' ) ;
-			tree.set( 2 , 'bob' ) ;
-			expect( [ ... tree ] ).to.equal( [ 'bob' , 'jack' ] ) ;
-			expect( [ ... tree.keys() ] ).to.equal( [ 2 , 3 ] ) ;
-			tree.sanityCheck() ;
+			expect( tree.get( 3 ) ).to.be.a( BinaryTree.Stack ) ;
+			expect( tree.get( 3 ) ).to.be.like( [ 'jack' , 'bobby' ] ) ;
+			expect( tree.get( 2 ) ).to.be.a( BinaryTree.Stack ) ;
+			expect( tree.get( 2 ) ).to.be.like( [ 'jean' , 'jeanjean' , 'jeanjeanjean' ] ) ;
+			expect( tree.get( 5 ) ).to.be( 'steve' ) ;
+			expect( tree.get( 2.5 ) ).to.be( 'john' ) ;
+			expect( tree.get( 2.7 ) ).to.be( 'robert' ) ;
+
+			// Try getting unexisting keys
+			expect( tree.get( 0 ) ).to.be( undefined ) ;
+			expect( tree.get( 9 ) ).to.be( undefined ) ;
 		} ) ;
 		
 		it( ".insert()" , () => {
@@ -217,7 +246,9 @@ describe( "Binary Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [ 'jack' , 'jean' , 'steve' ] ) ;
 			tree.sanityCheck() ;
 		} ) ;
-		
+
+		it( ".insertUnique()" ) ;
+
 		it( "delete by key" , () => {
 			var tree ;
 			
@@ -494,7 +525,7 @@ describe( "Binary Tree" , () => {
 
 	describe( "Advanced custom features" , () => {
 		
-		it( ".deleteValue()" , () => {
+		it( ".deleteValue() (and alias .removeValue())" , () => {
 			var tree ,
 				e1 = { v: 'jack' } ,
 				e2 = { v: 'bob' } ,
@@ -536,6 +567,23 @@ describe( "Binary Tree" , () => {
 			tree = new BinaryTree( null , NaN , NaN , NaN , e1 , NaN , e3 , NaN ) ;
 			tree.deleteValue( NaN ) ;
 			expect( [ ... tree ] ).to.equal( [ e1 , e3 ] ) ;
+			tree.sanityCheck() ;
+			
+			// Stacked values
+			tree = new BinaryTree( { stack: true } ) ;
+			tree.add( 1 , e1 ) ;
+			tree.add( 1 , e4 ) ;
+			tree.add( 2 , e1 ) ;
+			tree.add( 3 , e2 ) ;
+			tree.add( 3 , e1 ) ;
+			tree.add( 3 , e3 ) ;
+			tree.add( 4 , e4 ) ;
+
+			//tree.debugValues() ;
+			expect( [ ... tree ] ).to.equal( [ e1 , e4 , e1 , e2 , e1 , e3 , e4 ] ) ;
+			tree.deleteValue( e1 ) ;
+			//tree.debugValues() ;
+			expect( [ ... tree ] ).to.equal( [ e4 , e2 , e3 , e4 ] ) ;
 			tree.sanityCheck() ;
 		} ) ;
 		
@@ -975,68 +1023,42 @@ describe( "Binary Tree" , () => {
 			//tree.debug() ;
 			
 			// Including existing
-			expect( tree.getClosestNode( 2 , false , -1 ).key ).to.be( 2 ) ;
-			expect( tree.getClosestNode( 2 , false , 1 ).key ).to.be( 2 ) ;
-			expect( tree.getClosestNode( 2.72 , false , -1 ).key ).to.be( 2.72 ) ;
-			expect( tree.getClosestNode( 2.72 , false , 1 ).key ).to.be( 2.72 ) ;
-			expect( tree.getClosestNode( 2.8 , false , -1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.8 , false , 1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.85 , false , -1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 2.85 , false , 1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 6 , false , -1 ).key ).to.be( 6 ) ;
-			expect( tree.getClosestNode( 6 , false , 1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 2 , true , -1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2 , true , 1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.72 , true , -1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.72 , true , 1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.8 , true , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.8 , true , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.85 , true , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.85 , true , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 6 , true , -1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 6 , true , 1 ).key ).to.be( 6 ) ;
 
 			// Excluding existing
-			expect( tree.getClosestNode( 2 , true , -1 ) ).to.be( null ) ;
-			expect( tree.getClosestNode( 2 , true , 1 ).key ).to.be( 2.5 ) ;
-			expect( tree.getClosestNode( 2.5 , true , -1 ).key ).to.be( 2 ) ;
-			expect( tree.getClosestNode( 2.5 , true , 1 ).key ).to.be( 2.7 ) ;
-			expect( tree.getClosestNode( 2.7 , true , -1 ).key ).to.be( 2.5 ) ;
-			expect( tree.getClosestNode( 2.7 , true , 1 ).key ).to.be( 2.72 ) ;
-			expect( tree.getClosestNode( 2.72 , true , -1 ).key ).to.be( 2.7 ) ;
-			expect( tree.getClosestNode( 2.72 , true , 1 ).key ).to.be( 2.75 ) ;
-			expect( tree.getClosestNode( 2.75 , true , -1 ).key ).to.be( 2.72 ) ;
-			expect( tree.getClosestNode( 2.75 , true , 1 ).key ).to.be( 2.76 ) ;
-			expect( tree.getClosestNode( 2.76 , true , -1 ).key ).to.be( 2.75 ) ;
-			expect( tree.getClosestNode( 2.76 , true , 1 ).key ).to.be( 2.77 ) ;
-			expect( tree.getClosestNode( 2.77 , true , -1 ).key ).to.be( 2.76 ) ;
-			expect( tree.getClosestNode( 2.77 , true , 1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.8 , true , -1 ).key ).to.be( 2.77 ) ;
-			expect( tree.getClosestNode( 2.8 , true , 1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 2.85 , true , -1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.85 , true , 1 ).key ).to.be( 3 ) ;
-			expect( tree.getClosestNode( 3 , true , -1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 3 , true , 1 ).key ).to.be( 5 ) ;
-			expect( tree.getClosestNode( 6 , true , -1 ).key ).to.be( 5 ) ;
-			expect( tree.getClosestNode( 6 , true , 1 ) ).to.be( null ) ;
+			expect( tree.getClosestNode( 2 , false , -1 ) ).to.be( null ) ;
+			expect( tree.getClosestNode( 2 , false , 1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.5 , false , -1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.5 , false , 1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.7 , false , -1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.7 , false , 1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.72 , false , -1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.72 , false , 1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.75 , false , -1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.75 , false , 1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.76 , false , -1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.76 , false , 1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.77 , false , -1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.77 , false , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.8 , false , -1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.8 , false , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.85 , false , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.85 , false , 1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 3 , false , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 3 , false , 1 ).key ).to.be( 5 ) ;
+			expect( tree.getClosestNode( 6 , false , -1 ).key ).to.be( 5 ) ;
+			expect( tree.getClosestNode( 6 , false , 1 ) ).to.be( null ) ;
 
 			// Including unexisting
-			expect( tree.getClosestNode( 1 , false , -1 ) ).to.be( null ) ;
-			expect( tree.getClosestNode( 1 , false , 1 ).key ).to.be( 2 ) ;
-			expect( tree.getClosestNode( 2.1 , false , -1 ).key ).to.be( 2 ) ;
-			expect( tree.getClosestNode( 2.1 , false , 1 ).key ).to.be( 2.5 ) ;
-			expect( tree.getClosestNode( 2.6 , false , -1 ).key ).to.be( 2.5 ) ;
-			expect( tree.getClosestNode( 2.6 , false , 1 ).key ).to.be( 2.7 ) ;
-			expect( tree.getClosestNode( 2.71 , false , -1 ).key ).to.be( 2.7 ) ;
-			expect( tree.getClosestNode( 2.71 , false , 1 ).key ).to.be( 2.72 ) ;
-			expect( tree.getClosestNode( 2.73 , false , -1 ).key ).to.be( 2.72 ) ;
-			expect( tree.getClosestNode( 2.73 , false , 1 ).key ).to.be( 2.75 ) ;
-			expect( tree.getClosestNode( 2.755 , false , -1 ).key ).to.be( 2.75 ) ;
-			expect( tree.getClosestNode( 2.755 , false , 1 ).key ).to.be( 2.76 ) ;
-			expect( tree.getClosestNode( 2.765 , false , -1 ).key ).to.be( 2.76 ) ;
-			expect( tree.getClosestNode( 2.765 , false , 1 ).key ).to.be( 2.77 ) ;
-			expect( tree.getClosestNode( 2.78 , false , -1 ).key ).to.be( 2.77 ) ;
-			expect( tree.getClosestNode( 2.78 , false , 1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.84 , false , -1 ).key ).to.be( 2.8 ) ;
-			expect( tree.getClosestNode( 2.84 , false , 1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 2.9 , false , -1 ).key ).to.be( 2.85 ) ;
-			expect( tree.getClosestNode( 2.9 , false , 1 ).key ).to.be( 3 ) ;
-			expect( tree.getClosestNode( 4 , false , -1 ).key ).to.be( 3 ) ;
-			expect( tree.getClosestNode( 4 , false , 1 ).key ).to.be( 5 ) ;
-			expect( tree.getClosestNode( 7 , false , -1 ).key ).to.be( 6 ) ;
-			expect( tree.getClosestNode( 7 , false , 1 ) ).to.be( null ) ;
-			
-			// Excluding unexisting -- should be identical to 'including unexisting'
 			expect( tree.getClosestNode( 1 , true , -1 ) ).to.be( null ) ;
 			expect( tree.getClosestNode( 1 , true , 1 ).key ).to.be( 2 ) ;
 			expect( tree.getClosestNode( 2.1 , true , -1 ).key ).to.be( 2 ) ;
@@ -1061,6 +1083,32 @@ describe( "Binary Tree" , () => {
 			expect( tree.getClosestNode( 4 , true , 1 ).key ).to.be( 5 ) ;
 			expect( tree.getClosestNode( 7 , true , -1 ).key ).to.be( 6 ) ;
 			expect( tree.getClosestNode( 7 , true , 1 ) ).to.be( null ) ;
+			
+			// Excluding unexisting -- should be identical to 'including unexisting'
+			expect( tree.getClosestNode( 1 , false , -1 ) ).to.be( null ) ;
+			expect( tree.getClosestNode( 1 , false , 1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.1 , false , -1 ).key ).to.be( 2 ) ;
+			expect( tree.getClosestNode( 2.1 , false , 1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.6 , false , -1 ).key ).to.be( 2.5 ) ;
+			expect( tree.getClosestNode( 2.6 , false , 1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.71 , false , -1 ).key ).to.be( 2.7 ) ;
+			expect( tree.getClosestNode( 2.71 , false , 1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.73 , false , -1 ).key ).to.be( 2.72 ) ;
+			expect( tree.getClosestNode( 2.73 , false , 1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.755 , false , -1 ).key ).to.be( 2.75 ) ;
+			expect( tree.getClosestNode( 2.755 , false , 1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.765 , false , -1 ).key ).to.be( 2.76 ) ;
+			expect( tree.getClosestNode( 2.765 , false , 1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.78 , false , -1 ).key ).to.be( 2.77 ) ;
+			expect( tree.getClosestNode( 2.78 , false , 1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.84 , false , -1 ).key ).to.be( 2.8 ) ;
+			expect( tree.getClosestNode( 2.84 , false , 1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.9 , false , -1 ).key ).to.be( 2.85 ) ;
+			expect( tree.getClosestNode( 2.9 , false , 1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 4 , false , -1 ).key ).to.be( 3 ) ;
+			expect( tree.getClosestNode( 4 , false , 1 ).key ).to.be( 5 ) ;
+			expect( tree.getClosestNode( 7 , false , -1 ).key ).to.be( 6 ) ;
+			expect( tree.getClosestNode( 7 , false , 1 ) ).to.be( null ) ;
 		} ) ;
 	} ) ;
 } ) ;

@@ -9,7 +9,9 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "array-kit": "^0.2.2"
+  },
   "scripts": {
     "test": "tea-time -R dot -O"
   },
