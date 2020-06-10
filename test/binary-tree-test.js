@@ -641,6 +641,38 @@ describe( "Binary Tree" , () => {
 			expect( tree.filter( element => element.v.length <= 4 ) ).to.equal( [ e1 , e2 , e2 ] ) ;
 			expect( tree.filter( element => element.v.length >= 4 ) ).to.equal( [ e1 , e3 ] ) ;
 		} ) ;
+
+		it( ".slice() (or alias .arraySlice())" , () => {
+			var tree ;
+			
+			var reset = () => {
+				tree = new BinaryTree( { stack: true } ) ;
+				tree.add( 3 , 'jack' ) ;
+				tree.add( 2 , 'jean' ) ;
+				tree.add( 5 , 'steve' ) ;
+				tree.add( 2.5 , 'john' ) ;
+				tree.add( 2.7 , 'robert' ) ;
+				tree.add( 2.8 , 'johnson' ) ;
+				tree.add( 6 , 'bobby' ) ;
+				tree.add( 2.7 , 'robert2' ) ;
+				tree.add( 2.7 , 'robert3' ) ;
+			} ;
+			
+			reset() ;
+			expect( tree.slice( -1 , 10 ) ).to.equal( [ 'jean' , 'john' , 'robert' , 'robert2' , 'robert3' , 'johnson' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.slice( 2 , 6 ) ).to.equal( [ 'jean' , 'john' , 'robert' , 'robert2' , 'robert3' , 'johnson' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.slice( 3 , 5 ) ).to.equal( [ 'jack' , 'steve' ] ) ;
+			expect( tree.slice( 3 , 3 ) ).to.equal( [ 'jack' ] ) ;
+			expect( tree.slice( 3 , 2 ) ).to.equal( [] ) ;
+			expect( tree.slice( 30 , 40 ) ).to.equal( [] ) ;
+
+			expect( tree.slice( -1 , 10 , false ) ).to.equal( [ 'jean' , 'john' , 'robert' , 'robert2' , 'robert3' , 'johnson' , 'jack' , 'steve' , 'bobby' ] ) ;
+			expect( tree.slice( 2 , 6 , false ) ).to.equal( [ 'john' , 'robert' , 'robert2' , 'robert3' , 'johnson' , 'jack' , 'steve' ] ) ;
+			expect( tree.slice( 3 , 5 , false ) ).to.equal( [] ) ;
+			expect( tree.slice( 3 , 3 , false ) ).to.equal( [] ) ;
+			expect( tree.slice( 3 , 2 , false ) ).to.equal( [] ) ;
+			expect( tree.slice( 30 , 40 , false ) ).to.equal( [] ) ;
+		} ) ;
 	} ) ;
 
 	describe( "Advanced custom features" , () => {
