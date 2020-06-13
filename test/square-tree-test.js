@@ -26,7 +26,26 @@
 
 "use strict" ;
 
-exports.LinkedList = require( './LinkedList.js' ) ;
-exports.BinaryTree = require( './BinaryTree.js' ) ;
-exports.SquareTree = require( './SquareTree.js' ) ;
+/* global describe, it, before, after */
+
+
+
+const lib = require( '..' ) ;
+const SquareTree = lib.SquareTree ;
+
+
+
+describe( "Square Tree" , () => {
+
+	describe( "Basic features" , () => {
+		
+		it( "test" , () => {
+			var tree ;
+			
+			tree = new SquareTree() ;
+			tree.add( 0.1 , 0.1 , "bob" ) ;
+			console.log( tree ) ;
+		} ) ;
+	} ) ;
+} ) ;
 
