@@ -46,6 +46,21 @@ describe( "Square Tree" , () => {
 			tree.add( 0.1 , 0.1 , "bob" ) ;
 			console.log( tree ) ;
 		} ) ;
+
+		it( "test2" , () => {
+			var tree , i ;
+			
+			tree = new SquareTree() ;
+			
+			for ( i = 0 ; i < 16 ; i ++ ) {
+				tree.add( Math.random() , Math.random() , "bob" ) ;
+			}
+			console.log( tree ) ;
+
+			tree.add( Math.random() , Math.random() , "bob" ) ;
+			console.log( tree ) ;
+			console.log( tree.trunc.children ) ;
+		} ) ;
 	} ) ;
 } ) ;
 
