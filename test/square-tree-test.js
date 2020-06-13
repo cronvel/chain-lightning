@@ -39,27 +39,60 @@ describe( "Square Tree" , () => {
 
 	describe( "Basic features" , () => {
 		
-		it( "test" , () => {
+		it( "test1" , () => {
 			var tree ;
 			
 			tree = new SquareTree() ;
 			tree.add( 0.1 , 0.1 , "bob" ) ;
-			console.log( tree ) ;
+			tree.debug() ;
 		} ) ;
 
 		it( "test2" , () => {
-			var tree , i ;
+			var tree , i , point , leaf ;
 			
-			tree = new SquareTree() ;
+			tree = new SquareTree( { maxStackSize: 4 } ) ;
 			
 			for ( i = 0 ; i < 16 ; i ++ ) {
-				tree.add( Math.random() , Math.random() , "bob" ) ;
+				tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
 			}
-			console.log( tree ) ;
+			tree.debugValues() ;
 
-			tree.add( Math.random() , Math.random() , "bob" ) ;
-			console.log( tree ) ;
-			console.log( tree.trunc.children ) ;
+			console.log( "\n\n------------\n\n" ) ;
+
+			point = tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
+			tree.debugValues() ;
+
+			console.log( "\n\n------------\n\n" ) ;
+
+			for ( i = 0 ; i < 64 ; i ++ ) {
+				tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
+			}
+			tree.debugValues() ;
+			
+			leaf = tree.getPointLeaf( point ) ;
+			console.log( "Searching point: " , point ) ;
+			console.log( leaf ) ;
+			console.log( leaf.node.stack ) ;
+		} ) ;
+
+		it( "test3" , () => {
+			var tree , i , point , leaf ;
+			
+			tree = new SquareTree( { maxStackSize: 4 } ) ;
+			
+			console.log( "\n\n------------\n\n" ) ;
+
+			for ( i = 0 ; i < 64 ; i ++ ) {
+				tree.add( 0.1 * Math.random() , 0.1 * Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
+			}
+
+			point = tree.add( 0.1 * Math.random() , 0.1 * Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
+			tree.debugValues() ;
+			
+			leaf = tree.getPointLeaf( point ) ;
+			console.log( "Searching point: " , point ) ;
+			console.log( leaf ) ;
+			console.log( leaf.node.stack ) ;
 		} ) ;
 	} ) ;
 } ) ;
