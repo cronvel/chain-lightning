@@ -50,7 +50,7 @@ describe( "Square Tree" , () => {
 		it( "test2" , () => {
 			var tree , i , point , leaf ;
 			
-			tree = new SquareTree( { maxStackSize: 4 } ) ;
+			tree = new SquareTree( { maxLeafPoints: 4 } ) ;
 			
 			for ( i = 0 ; i < 16 ; i ++ ) {
 				tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
@@ -78,7 +78,7 @@ describe( "Square Tree" , () => {
 		it( "test3" , () => {
 			var tree , i , point , leaf ;
 			
-			tree = new SquareTree( { maxStackSize: 4 } ) ;
+			tree = new SquareTree( { maxLeafPoints: 4 } ) ;
 			
 			console.log( "\n\n------------\n\n" ) ;
 
