@@ -69,10 +69,10 @@ describe( "Square Tree" , () => {
 			}
 			tree.debugValues() ;
 			
-			leaf = tree.getPointLeaf( point ) ;
+			leaf = tree.getLeaf( point ) ;
 			console.log( "Searching point: " , point ) ;
 			console.log( leaf ) ;
-			console.log( leaf.node.stack ) ;
+			console.log( leaf.node.points ) ;
 		} ) ;
 
 		it( "test3" , () => {
@@ -89,10 +89,28 @@ describe( "Square Tree" , () => {
 			point = tree.add( 0.1 * Math.random() , 0.1 * Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
 			tree.debugValues() ;
 			
-			leaf = tree.getPointLeaf( point ) ;
+			leaf = tree.getLeaf( point.x , point.y ) ;
 			console.log( "Searching point: " , point ) ;
 			console.log( leaf ) ;
-			console.log( leaf.node.stack ) ;
+			console.log( leaf.node.points ) ;
+		} ) ;
+
+		it( "Stack elements on the same point" , () => {
+			var tree , i , point , leaf ;
+			
+			tree = new SquareTree() ;
+			
+			tree.add( 0.1 , 0.1 , "one" ) ;
+			tree.debugValues() ;
+			console.log( "\n\n------------\n\n" ) ;
+
+			tree.add( 0.1 , 0.1 , "two" ) ;
+			tree.debugValues() ;
+			console.log( "\n\n------------\n\n" ) ;
+			
+			leaf = tree.getLeaf( 0.1 , 0.1 ) ;
+			console.log( leaf ) ;
+			console.log( leaf.node.points ) ;
 		} ) ;
 	} ) ;
 } ) ;
