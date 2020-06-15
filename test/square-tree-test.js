@@ -54,6 +54,26 @@ describe( "Square Tree" , () => {
 			expect( tree.getMany( 0.1 , 0.1 ) ).to.equal( [ "one" , "two" ] ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 		} ) ;
+
+		it( "Node merging after delete" , () => {
+			var tree , i , point , leaf ;
+			
+			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			
+			tree.add( 0.11 , 0.11 , "one" ) ;
+			tree.add( 0.12 , 0.12 , "two" ) ;
+			tree.add( 0.13 , 0.13 , "three" ) ;
+			tree.add( 0.14 , 0.14 , "four" ) ;
+			tree.add( 0.15 , 0.15 , "five" ) ;
+			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+
+			tree.removePoint( 0.11 , 0.11 ) ;
+			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			tree.removePoint( 0.12 , 0.12 ) ;
+			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			tree.removePoint( 0.13 , 0.13 ) ;
+			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+		} ) ;
 	} ) ;
 
 	describe( "misc tests" , () => {
