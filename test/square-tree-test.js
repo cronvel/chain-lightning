@@ -38,6 +38,25 @@ const SquareTree = lib.SquareTree ;
 describe( "Square Tree" , () => {
 
 	describe( "Basic features" , () => {
+
+		it( "Stack elements on the same point" , () => {
+			var tree ;
+			
+			tree = new SquareTree() ;
+			
+			tree.add( 0.1 , 0.1 , "one" ) ;
+			expect( tree.getOne( 0.1 , 0.1 ) ).to.be( "one" ) ;
+			expect( tree.getMany( 0.1 , 0.1 ) ).to.equal( [ "one" ] ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+
+			tree.add( 0.1 , 0.1 , "two" ) ;
+			expect( tree.getOne( 0.1 , 0.1 ) ).to.be( "one" ) ;
+			expect( tree.getMany( 0.1 , 0.1 ) ).to.equal( [ "one" , "two" ] ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+		} ) ;
+	} ) ;
+
+	describe( "misc tests" , () => {
 		
 		it( "test1" , () => {
 			var tree ;
@@ -91,24 +110,6 @@ describe( "Square Tree" , () => {
 			
 			leaf = tree.getLeaf( point.x , point.y ) ;
 			console.log( "Searching point: " , point ) ;
-			console.log( leaf ) ;
-			console.log( leaf.node.points ) ;
-		} ) ;
-
-		it( "Stack elements on the same point" , () => {
-			var tree , i , point , leaf ;
-			
-			tree = new SquareTree() ;
-			
-			tree.add( 0.1 , 0.1 , "one" ) ;
-			tree.debugValues() ;
-			console.log( "\n\n------------\n\n" ) ;
-
-			tree.add( 0.1 , 0.1 , "two" ) ;
-			tree.debugValues() ;
-			console.log( "\n\n------------\n\n" ) ;
-			
-			leaf = tree.getLeaf( 0.1 , 0.1 ) ;
 			console.log( leaf ) ;
 			console.log( leaf.node.points ) ;
 		} ) ;
