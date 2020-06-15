@@ -39,6 +39,25 @@ describe( "Square Tree" , () => {
 
 	describe( "Basic features" , () => {
 
+		it( "Iterator" , () => {
+			var tree ;
+			
+			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			
+			tree.add( 0.1 , 0.1 , "one" ) ;
+			tree.add( 0.1 , 0.1 , "two" ) ;
+			tree.add( 0.2 , 0.2 , "three" ) ;
+			tree.add( 0.3 , 0.3 , "four" ) ;
+			expect( [ ... tree.values() ] ).to.equal( [ "one" , "two" , "three" , "four" ] ) ;
+
+			tree.add( 0.11 , 0.11 , "five" ) ;
+			tree.add( 0.12 , 0.12 , "six" ) ;
+			tree.add( 0.13 , 0.13 , "seven" ) ;
+			tree.add( 0.13 , 0.13 , "eight" ) ;
+			tree.add( 0.13 , 0.13 , "nine" ) ;
+			expect( [ ... tree.values() ] ).to.equal( [ "one" , "two" , "five" , "six" , "three" , "seven" , "eight" , "nine" , "four" ] ) ;
+		} ) ;
+
 		it( "Stack elements on the same point" , () => {
 			var tree ;
 			
@@ -55,7 +74,43 @@ describe( "Square Tree" , () => {
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 		} ) ;
 
-		it( "Node merging after delete" , () => {
+		it( ".deleteElement()" , () => {
+			var tree ;
+			
+			tree = new SquareTree() ;
+			
+			tree.add( 0.1 , 0.1 , "one" ) ;
+			tree.add( 0.1 , 0.1 , "two" ) ;
+			tree.add( 0.2 , 0.2 , "three" ) ;
+			expect( [ ... tree ] ).to.equal( [
+				[ { x: 0.1 , y: 0.1 } , "one" ] ,
+				[ { x: 0.1 , y: 0.1 } , "two" ] ,
+				[ { x: 0.2 , y: 0.2 } , "three" ]
+			] ) ;
+
+			tree.deleteElement( 0.2 , 0.2 , "one" ) 
+			expect( [ ... tree ] ).to.equal( [
+				[ { x: 0.1 , y: 0.1 } , "one" ] ,
+				[ { x: 0.1 , y: 0.1 } , "two" ] ,
+				[ { x: 0.2 , y: 0.2 } , "three" ]
+			] ) ;
+
+			tree.deleteElement( 0.1 , 0.1 , "one" ) 
+			expect( [ ... tree ] ).to.equal( [
+				[ { x: 0.1 , y: 0.1 } , "two" ] ,
+				[ { x: 0.2 , y: 0.2 } , "three" ]
+			] ) ;
+
+			tree.deleteElement( 0.1 , 0.1 , "two" ) 
+			expect( [ ... tree ] ).to.equal( [
+				[ { x: 0.2 , y: 0.2 } , "three" ]
+			] ) ;
+
+			tree.deleteElement( 0.2 , 0.2 , "three" ) 
+			expect( [ ... tree ] ).to.equal( [] ) ;
+		} ) ;
+
+		it( "Node subdivision and node merging" , () => {
 			var tree , i , point , leaf ;
 			
 			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
@@ -64,15 +119,53 @@ describe( "Square Tree" , () => {
 			tree.add( 0.12 , 0.12 , "two" ) ;
 			tree.add( 0.13 , 0.13 , "three" ) ;
 			tree.add( 0.14 , 0.14 , "four" ) ;
+			expect( tree.trunc.children ).to.be( null ) ;
+			expect( [ ... tree.trunc.points ] ).to.be.like( [
+				{ x: 0.11, y: 0.11, e: "one" } ,
+				{ x: 0.12, y: 0.12, e: "two" } ,
+				{ x: 0.13, y: 0.13, e: "three" } ,
+				{ x: 0.14, y: 0.14, e: "four" } ,
+			] ) ;
+
 			tree.add( 0.15 , 0.15 , "five" ) ;
-			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].points ] ).to.be.like( [
+				{ x: 0.11, y: 0.11, e: "one" } ,
+				{ x: 0.12, y: 0.12, e: "two" }
+			] ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[3].points ] ).to.be.like( [
+				{ x: 0.13, y: 0.13, e: "three" } ,
+				{ x: 0.14, y: 0.14, e: "four" } ,
+				{ x: 0.15, y: 0.15, e: "five" }
+			] ) ;
 
 			tree.removePoint( 0.11 , 0.11 ) ;
-			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].points ] ).to.be.like( [
+				{ x: 0.12, y: 0.12, e: "two" }
+			] ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[3].points ] ).to.be.like( [
+				{ x: 0.13, y: 0.13, e: "three" } ,
+				{ x: 0.14, y: 0.14, e: "four" } ,
+				{ x: 0.15, y: 0.15, e: "five" }
+			] ) ;
+
 			tree.removePoint( 0.12 , 0.12 ) ;
-			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].points ] ).to.be.like( [] ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[3].points ] ).to.be.like( [
+				{ x: 0.13, y: 0.13, e: "three" } ,
+				{ x: 0.14, y: 0.14, e: "four" } ,
+				{ x: 0.15, y: 0.15, e: "five" }
+			] ) ;
+
 			tree.removePoint( 0.13 , 0.13 ) ;
-			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			expect( tree.trunc.children ).to.be( null ) ;
+			expect( [ ... tree.trunc.points ] ).to.be.like( [
+				{ x: 0.14, y: 0.14, e: "four" } ,
+				{ x: 0.15, y: 0.15, e: "five" }
+			] ) ;
 		} ) ;
 	} ) ;
 
