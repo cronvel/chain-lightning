@@ -129,6 +129,22 @@ describe( "Square Tree" , () => {
 			console.log( "elements:" , elements ) ;
 		} ) ;
 
+		it( "xxx Get the closest point" , () => {
+			var tree , point ;
+			
+			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			
+			tree.add( 0.11 , 0.11 , "one" ) ;
+			tree.add( 0.12 , 0.12 , "two" ) ;
+			tree.add( 0.13 , 0.13 , "three" ) ;
+			tree.add( 0.13 , 0.13 , "three²" ) ;
+			tree.add( 0.14 , 0.14 , "four" ) ;
+			tree.add( 0.15 , 0.15 , "five" ) ;
+			//point = tree.getClosestPoint( 0.117 , 0.118 ) ;
+			point = tree.getClosestPoint( 0.99 , 0.8 ) ;
+			console.log( "point:" , point ) ;
+		} ) ;
+
 		it( "Node subdivision and node merging" , () => {
 			var tree , i , point , leaf ;
 			
