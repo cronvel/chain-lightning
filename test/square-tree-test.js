@@ -110,6 +110,25 @@ describe( "Square Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [] ) ;
 		} ) ;
 
+		it( "zzz Get leaves/points/elements of an area" , () => {
+			var tree , elements , points , leaves ;
+			
+			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			
+			tree.add( 0.11 , 0.11 , "one" ) ;
+			tree.add( 0.12 , 0.12 , "two" ) ;
+			tree.add( 0.13 , 0.13 , "three" ) ;
+			tree.add( 0.13 , 0.13 , "three²" ) ;
+			tree.add( 0.14 , 0.14 , "four" ) ;
+			tree.add( 0.15 , 0.15 , "five" ) ;
+			leaves = tree.getAreaLeaves( 0.1 , 0.1 , 0.03 , 0.03 ) ;
+			console.log( "leaves" , leaves ) ;
+			points = tree.getAreaPoints( 0.1 , 0.1 , 0.03 , 0.03 ) ;
+			console.log( "points:" , points ) ;
+			elements = tree.getArea( 0.1 , 0.1 , 0.03 , 0.03 ) ;
+			console.log( "elements:" , elements ) ;
+		} ) ;
+
 		it( "Node subdivision and node merging" , () => {
 			var tree , i , point , leaf ;
 			
@@ -201,7 +220,7 @@ describe( "Square Tree" , () => {
 			}
 			tree.debugValues() ;
 			
-			leaf = tree.getLeaf( point ) ;
+			leaf = tree.getLeaf( point.x , point.y ) ;
 			console.log( "Searching point: " , point ) ;
 			console.log( leaf ) ;
 			console.log( leaf.node.points ) ;
