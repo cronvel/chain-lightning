@@ -1,7 +1,7 @@
 /*
 	Chain Lightning
 
-	Copyright (c) 2018 Cédric Ronvel
+	Copyright (c) 2018 - 2020 Cédric Ronvel
 
 	The MIT License (MIT)
 
@@ -31,7 +31,42 @@
 
 
 const lib = require( '..' ) ;
-const SquareTree = lib.SquareTree ;
+const QuadTree = lib.QuadTree ;
+
+
+
+/*
+	Helpers
+*/
+
+
+
+// Generate data
+function generateRawData( n ) {
+	var i , array = new Array( n ) ;
+
+	for ( i = 0 ; i < n ; i ++ ) {
+		array[ i ] = [ Math.random() , Math.random() , '#' + i ] ;
+	}
+
+	return array ;
+}
+
+
+
+function closestToRawData( array , x , y ) {
+	var element , closest , dist , minDist = Infinity ;
+
+	for ( element of array ) {
+		dist = Math.hypot( x - element[ 0 ] , y - element[ 1 ] ) ;
+		if ( dist < minDist ) {
+			minDist = dist ;
+			closest = element ;
+		}
+	}
+
+	return closest ;
+}
 
 
 
@@ -42,7 +77,7 @@ describe( "Square Tree" , () => {
 		it( "Iterator" , () => {
 			var tree ;
 			
-			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
 			
 			tree.add( 0.1 , 0.1 , "one" ) ;
 			tree.add( 0.1 , 0.1 , "two" ) ;
@@ -61,7 +96,7 @@ describe( "Square Tree" , () => {
 		it( "Stack elements on the same point" , () => {
 			var tree ;
 			
-			tree = new SquareTree() ;
+			tree = new QuadTree() ;
 			
 			tree.add( 0.1 , 0.1 , "one" ) ;
 			expect( tree.getOne( 0.1 , 0.1 ) ).to.be( "one" ) ;
@@ -77,7 +112,7 @@ describe( "Square Tree" , () => {
 		it( ".deleteElement()" , () => {
 			var tree ;
 			
-			tree = new SquareTree() ;
+			tree = new QuadTree() ;
 			
 			tree.add( 0.1 , 0.1 , "one" ) ;
 			tree.add( 0.1 , 0.1 , "two" ) ;
@@ -113,7 +148,7 @@ describe( "Square Tree" , () => {
 		it( "zzz Get leaves/points/elements of an area" , () => {
 			var tree , elements , points , leaves ;
 			
-			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
 			
 			tree.add( 0.11 , 0.11 , "one" ) ;
 			tree.add( 0.12 , 0.12 , "two" ) ;
@@ -129,26 +164,31 @@ describe( "Square Tree" , () => {
 			console.log( "elements:" , elements ) ;
 		} ) ;
 
-		it( "xxx Get the closest point" , () => {
-			var tree , point ;
+		it( "Test the closest point algo on random data (comparing it to brute-force results)" , () => {
+			var tree , point , rawElement ,
+				randomX , randomY ,
+				testCount = 100 ,
+				rawData = generateRawData( 1000 ) ;
 			
-			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
-			
-			tree.add( 0.11 , 0.11 , "one" ) ;
-			tree.add( 0.12 , 0.12 , "two" ) ;
-			tree.add( 0.13 , 0.13 , "three" ) ;
-			tree.add( 0.13 , 0.13 , "three²" ) ;
-			tree.add( 0.14 , 0.14 , "four" ) ;
-			tree.add( 0.15 , 0.15 , "five" ) ;
-			//point = tree.getClosestPoint( 0.117 , 0.118 ) ;
-			point = tree.getClosestPoint( 0.99 , 0.8 ) ;
-			console.log( "point:" , point ) ;
+			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			for ( let e of rawData ) { tree.add( ... e ) ; }
+
+			while ( testCount -- ) {
+				randomX = Math.random() ;
+				randomY = Math.random() ;
+				point = tree.getClosestPoint( randomX , randomY ) ;
+				rawElement = closestToRawData( rawData , randomX , randomY ) ;
+				//console.log( "\n\nRESULTS:\n" , point , rawElement ) ;
+				expect( point.x ).to.be( rawElement[ 0 ] ) ;
+				expect( point.y ).to.be( rawElement[ 1 ] ) ;
+				expect( point.e ).to.be( rawElement[ 2 ] ) ;
+			}
 		} ) ;
 
 		it( "Node subdivision and node merging" , () => {
 			var tree , i , point , leaf ;
 			
-			tree = new SquareTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
 			
 			tree.add( 0.11 , 0.11 , "one" ) ;
 			tree.add( 0.12 , 0.12 , "two" ) ;
@@ -209,7 +249,7 @@ describe( "Square Tree" , () => {
 		it( "test1" , () => {
 			var tree ;
 			
-			tree = new SquareTree() ;
+			tree = new QuadTree() ;
 			tree.add( 0.1 , 0.1 , "bob" ) ;
 			tree.debug() ;
 		} ) ;
@@ -217,7 +257,7 @@ describe( "Square Tree" , () => {
 		it( "test2" , () => {
 			var tree , i , point , leaf ;
 			
-			tree = new SquareTree( { maxLeafPoints: 4 } ) ;
+			tree = new QuadTree( { maxLeafPoints: 4 } ) ;
 			
 			for ( i = 0 ; i < 16 ; i ++ ) {
 				tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
@@ -245,7 +285,7 @@ describe( "Square Tree" , () => {
 		it( "test3" , () => {
 			var tree , i , point , leaf ;
 			
-			tree = new SquareTree( { maxLeafPoints: 4 } ) ;
+			tree = new QuadTree( { maxLeafPoints: 4 } ) ;
 			
 			console.log( "\n\n------------\n\n" ) ;
 
