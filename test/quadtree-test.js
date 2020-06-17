@@ -54,7 +54,7 @@ function generateRawData( n ) {
 
 
 
-function closestToRawData( array , x , y ) {
+function rawDataClosest( array , x , y ) {
 	var element , closest , dist , minDist = Infinity ;
 
 	for ( element of array ) {
@@ -66,6 +66,22 @@ function closestToRawData( array , x , y ) {
 	}
 
 	return closest ;
+}
+
+
+
+function rawDataArea( array , x , y , w , h ) {
+	var element , result = [] ;
+
+	for ( element of array ) {
+		if ( element[ 0 ] >= x && element[ 0 ] <= x + w && element[ 1 ] >= y && element[ 1 ] <= y + h ) {
+			result.push( element ) ;
+		}
+	}
+
+	result.sort( ( a , b ) => a[ 0 ] === b[ 0 ] ? a[ 1 ] - b[ 1 ] : a[ 0 ] - b[ 0 ] ) ;
+
+	return result ;
 }
 
 
@@ -164,6 +180,35 @@ describe( "Square Tree" , () => {
 			console.log( "elements:" , elements ) ;
 		} ) ;
 
+		it( "Test the area algo on random data (comparing it to brute-force results)" , () => {
+			var tree , points , rawElements ,
+				randomX , randomY , randomX2 , randomY2 , randomW , randomH ,
+				testCount = 100 ,
+				rawData = generateRawData( 1000 ) ;
+			
+			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			for ( let e of rawData ) { tree.add( ... e ) ; }
+
+			while ( testCount -- ) {
+				randomX = Math.random() ;
+				randomX2 = Math.random() ;
+				if ( randomX <= randomX2 ) { randomW = randomX2 - randomX ; }
+				else { randomW = randomX - randomX2 ; randomX = randomX2 ; }
+
+				randomY = Math.random() ;
+				randomY2 = Math.random() ;
+				if ( randomY <= randomY2 ) { randomH = randomY2 - randomY ; }
+				else { randomH = randomY - randomY2 ; randomY = randomY2 ; }
+
+				points = tree.getAreaPoints( randomX , randomY , randomW , randomH ) ;
+				points.sort( ( a , b ) => a.x === b.x ? a.y - b.y : a.x - b.x ) ;
+				points = points.map( e => [ e.x , e.y , e.e ] ) ;
+				rawElements = rawDataArea( rawData , randomX , randomY , randomW , randomH ) ;
+
+				expect( points ).to.equal( rawElements ) ;
+			}
+		} ) ;
+
 		it( "Test the closest point algo on random data (comparing it to brute-force results)" , () => {
 			var tree , point , rawElement ,
 				randomX , randomY ,
@@ -177,7 +222,7 @@ describe( "Square Tree" , () => {
 				randomX = Math.random() ;
 				randomY = Math.random() ;
 				point = tree.getClosestPoint( randomX , randomY ) ;
-				rawElement = closestToRawData( rawData , randomX , randomY ) ;
+				rawElement = rawDataClosest( rawData , randomX , randomY ) ;
 				//console.log( "\n\nRESULTS:\n" , point , rawElement ) ;
 				expect( point.x ).to.be( rawElement[ 0 ] ) ;
 				expect( point.y ).to.be( rawElement[ 1 ] ) ;
