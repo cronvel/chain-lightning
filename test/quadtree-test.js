@@ -86,7 +86,7 @@ function rawDataArea( array , x , y , w , h ) {
 
 
 
-describe( "Square Tree" , () => {
+describe( "Quad Tree" , () => {
 
 	describe( "Basic features" , () => {
 
