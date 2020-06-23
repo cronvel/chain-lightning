@@ -98,7 +98,7 @@ function rawDataArea( array , x , y , w , h ) {
 
 
 function createClosestPointBenchmark( elementCount , testPointCount ) {
-	benchmark( 'Closest point: QuadTree vs Array (' + elementCount + ' elements - ' + testPointCount + ' test points batch)' , () => {
+	benchmark( 'Closest point/element: QuadTree vs Array (' + elementCount + ' elements - ' + testPointCount + ' test points batch)' , () => {
 		var rawData = generateRawData( elementCount ) ,
 			testPoints = generateRandomPoints( testPointCount ) ,
 			defaultTree = new QuadTree() ,
@@ -116,50 +116,50 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 		}
 		
 		competitor( 'QuadTree with default params' , () => {
-			var i , point ;
+			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = defaultTree.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				element = defaultTree.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
 		competitor( 'QuadTree with maxLeafPoints: 4' , () => {
-			var i , point ;
+			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree4ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				element = tree4ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
 		competitor( 'QuadTree with maxLeafPoints: 32' , () => {
-			var i , point ;
+			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree32ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				element = tree32ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
 		competitor( 'QuadTree with maxLeafPoints: 64' , () => {
-			var i , point ;
+			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree64ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				element = tree64ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
 		competitor( 'QuadTree with maxLeafPoints: 128' , () => {
-			var i , point ;
+			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree128ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				element = tree128ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
 		competitor( 'Array' , () => {
-			var i , point ;
+			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = rawDataClosest( rawData , testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				element = rawDataClosest( rawData , testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 	} ) ;
@@ -175,7 +175,7 @@ createClosestPointBenchmark( 100000 , 100 ) ;
 
 
 function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
-	benchmark( 'Area points (axis aligned rectangular region): QuadTree vs Array (' + elementCount + ' elements - area side at most ' + Math.round( areaSize * 100 ) + '% of the total size - ' + testAreaCount + ' test areas batch)' , () => {
+	benchmark( 'Area points/elements (axis aligned rectangular region): QuadTree vs Array (' + elementCount + ' elements - area side at most ' + Math.round( areaSize * 100 ) + '% of the total size - ' + testAreaCount + ' test areas batch)' , () => {
 		var rawData = generateRawData( elementCount ) ,
 			testAreas = generateRandomAreas( testAreaCount ) ,
 			defaultTree = new QuadTree() ,
@@ -197,6 +197,14 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 
 			for ( i = 0 ; i < testAreaCount ; i ++ ) {
 				points = defaultTree.getAreaPoints( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
+			}
+		} ) ;
+
+		competitor( 'QuadTree with default params getting the elements instead of the points' , () => {
+			var i , elements ;
+
+			for ( i = 0 ; i < testAreaCount ; i ++ ) {
+				elements = defaultTree.getArea( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
 			}
 		} ) ;
 
@@ -232,6 +240,7 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 			}
 		} ) ;
 
+		/*
 		competitor( 'Array' , () => {
 			var i , points ;
 
@@ -239,6 +248,7 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 				points = rawDataArea( rawData , testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
 			}
 		} ) ;
+		//*/
 	} ) ;
 }
 

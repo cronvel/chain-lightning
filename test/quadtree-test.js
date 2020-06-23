@@ -180,13 +180,13 @@ describe( "Quad Tree" , () => {
 			console.log( "elements:" , elements ) ;
 		} ) ;
 
-		it( "Test the area algo on random data (comparing it to brute-force results)" , () => {
-			var tree , points , rawElements ,
+		it( "Test the area algorithm on random data, comparing it to brute-force results" , () => {
+			var tree , points , elements , rawElements ,
 				randomX , randomY , randomX2 , randomY2 , randomW , randomH ,
 				testCount = 100 ,
 				rawData = generateRawData( 1000 ) ;
 			
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree() ;
 			for ( let e of rawData ) { tree.add( ... e ) ; }
 
 			while ( testCount -- ) {
@@ -201,6 +201,10 @@ describe( "Quad Tree" , () => {
 				else { randomH = randomY - randomY2 ; randomY = randomY2 ; }
 
 				points = tree.getAreaPoints( randomX , randomY , randomW , randomH ) ;
+				elements = tree.getArea( randomX , randomY , randomW , randomH ) ;
+				// They must come in the same order, and BTW the test should be performed BEFORE sorting
+				expect( points.map( p => p.e ) ).to.equal( elements ) ;
+
 				points.sort( ( a , b ) => a.x === b.x ? a.y - b.y : a.x - b.x ) ;
 				points = points.map( e => [ e.x , e.y , e.e ] ) ;
 				rawElements = rawDataArea( rawData , randomX , randomY , randomW , randomH ) ;
@@ -209,24 +213,26 @@ describe( "Quad Tree" , () => {
 			}
 		} ) ;
 
-		it( "Test the closest point algo on random data (comparing it to brute-force results)" , () => {
-			var tree , point , rawElement ,
+		it( "Test the closest point algorithme on random data, comparing it to brute-force results" , () => {
+			var tree , point , element , rawElement ,
 				randomX , randomY ,
 				testCount = 100 ,
 				rawData = generateRawData( 1000 ) ;
 			
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree() ;
 			for ( let e of rawData ) { tree.add( ... e ) ; }
 
 			while ( testCount -- ) {
 				randomX = Math.random() ;
 				randomY = Math.random() ;
 				point = tree.getClosestPointTo( randomX , randomY ) ;
+				element = tree.getClosestTo( randomX , randomY ) ;
 				rawElement = rawDataClosest( rawData , randomX , randomY ) ;
 				//console.log( "\n\nRESULTS:\n" , point , rawElement ) ;
 				expect( point.x ).to.be( rawElement[ 0 ] ) ;
 				expect( point.y ).to.be( rawElement[ 1 ] ) ;
 				expect( point.e ).to.be( rawElement[ 2 ] ) ;
+				expect( point.e ).to.be( element ) ;
 			}
 		} ) ;
 
