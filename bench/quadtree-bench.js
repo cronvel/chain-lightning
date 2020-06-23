@@ -175,7 +175,7 @@ createClosestPointBenchmark( 100000 , 100 ) ;
 
 
 function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
-	benchmark( 'Area points/elements (axis aligned rectangular region): QuadTree vs Array (' + elementCount + ' elements - area side at most ' + Math.round( areaSize * 100 ) + '% of the total size - ' + testAreaCount + ' test areas batch)' , () => {
+	benchmark( 'Area points/elements (axis aligned rectangular region): QuadTree vs Array (' + elementCount + ' elements - area side at most ' + ( areaSize * 100 ) + '% of the total size - ' + testAreaCount + ' test areas batch)' , () => {
 		var rawData = generateRawData( elementCount ) ,
 			testAreas = generateRandomAreas( testAreaCount ) ,
 			defaultTree = new QuadTree() ,
@@ -191,6 +191,9 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 			tree64ppl.add( ... e ) ;
 			tree128ppl.add( ... e ) ;
 		}
+		
+		process.stdout.write( "\ndefaultTree nodes: " + defaultTree.nodeCount() + ' -- leaves: ' + defaultTree.leafCount() + '\n' ) ;
+		process.stdout.write( "tree128ppl nodes: " + tree128ppl.nodeCount() + ' -- leaves: ' + tree128ppl.leafCount() + '\n' ) ;
 		
 		competitor( 'QuadTree with default params' , () => {
 			var i , points ;
@@ -240,7 +243,7 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 			}
 		} ) ;
 
-		//*
+		/*
 		competitor( 'Array' , () => {
 			var i , points ;
 
@@ -281,6 +284,7 @@ createAreaPointsBenchmark( 100000 , 100 , 0.2 ) ;
 
 //*/
 createClosestPointBenchmark( 400000 , 100 ) ;
+createAreaPointsBenchmark( 400000 , 100 , 0.001 ) ;
 createAreaPointsBenchmark( 400000 , 100 , 0.01 ) ;
 createAreaPointsBenchmark( 400000 , 100 , 0.05 ) ;
 createAreaPointsBenchmark( 400000 , 100 , 0.2 ) ;

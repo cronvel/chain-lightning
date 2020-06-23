@@ -182,25 +182,25 @@ describe( "Quad Tree" , () => {
 
 		it( "Test the area algorithm on random data, comparing it to brute-force results" , () => {
 			var tree , points , elements , rawElements ,
-				randomX , randomY , randomX2 , randomY2 , randomW , randomH ,
-				testCount = 100 ,
+				randomX , randomY , randomW , randomH ,
+				testCount = 100 , sizeLimit = 0.5 ,
 				rawData = generateRawData( 1000 ) ;
 			
 			tree = new QuadTree() ;
 			for ( let e of rawData ) { tree.add( ... e ) ; }
 
-			while ( testCount -- ) {
-				randomX = Math.random() ;
-				randomX2 = Math.random() ;
-				if ( randomX <= randomX2 ) { randomW = randomX2 - randomX ; }
-				else { randomW = randomX - randomX2 ; randomX = randomX2 ; }
+			//console.log( "tree node:" , tree.nodeCount() , " -- tree leaves:" , tree.leafCount() ) ;
 
-				randomY = Math.random() ;
-				randomY2 = Math.random() ;
-				if ( randomY <= randomY2 ) { randomH = randomY2 - randomY ; }
-				else { randomH = randomY - randomY2 ; randomY = randomY2 ; }
+			while ( testCount -- ) {
+				//QuadTree.overlap = QuadTree.encompass = QuadTree.seen = 0 ;
+				randomW = Math.random() * sizeLimit ;
+				randomX = Math.random() * ( 1 - randomW ) ;
+				
+				randomH = Math.random() * sizeLimit ;
+				randomY = Math.random() * ( 1 - randomH ) ;
 
 				points = tree.getAreaPoints( randomX , randomY , randomW , randomH ) ;
+				//console.log( "Seen:" , QuadTree.seen , " -- Overlap:" , QuadTree.overlap , " -- Encompass:" , QuadTree.encompass ) ;
 				elements = tree.getArea( randomX , randomY , randomW , randomH ) ;
 				// They must come in the same order, and BTW the test should be performed BEFORE sorting
 				expect( points.map( p => p.e ) ).to.equal( elements ) ;
@@ -213,7 +213,7 @@ describe( "Quad Tree" , () => {
 			}
 		} ) ;
 
-		it( "Test the closest point algorithme on random data, comparing it to brute-force results" , () => {
+		it( "Test the closest point algorithm on random data, comparing it to brute-force results" , () => {
 			var tree , point , element , rawElement ,
 				randomX , randomY ,
 				testCount = 100 ,
