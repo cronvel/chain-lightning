@@ -221,7 +221,7 @@ describe( "Quad Tree" , () => {
 			while ( testCount -- ) {
 				randomX = Math.random() ;
 				randomY = Math.random() ;
-				point = tree.getClosestPoint( randomX , randomY ) ;
+				point = tree.getClosestPointTo( randomX , randomY ) ;
 				rawElement = rawDataClosest( rawData , randomX , randomY ) ;
 				//console.log( "\n\nRESULTS:\n" , point , rawElement ) ;
 				expect( point.x ).to.be( rawElement[ 0 ] ) ;

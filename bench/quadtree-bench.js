@@ -71,7 +71,7 @@ function rawDataClosest( array , x , y ) {
 		}
 	}
 
-	return closest ;
+	return closest[ 2 ] ;
 }
 
 
@@ -119,7 +119,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			var i , point ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = defaultTree.getClosestPoint( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				point = defaultTree.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
@@ -127,7 +127,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			var i , point ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree4ppl.getClosestPoint( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				point = tree4ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
@@ -135,7 +135,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			var i , point ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree32ppl.getClosestPoint( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				point = tree32ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
@@ -143,7 +143,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			var i , point ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree64ppl.getClosestPoint( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				point = tree64ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
@@ -151,7 +151,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			var i , point ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
-				point = tree128ppl.getClosestPoint( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
+				point = tree128ppl.getClosestTo( testPoints[ i ][ 0 ] , testPoints[ i ][ 1 ] ) ;
 			}
 		} ) ;
 
