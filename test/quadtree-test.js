@@ -247,50 +247,50 @@ describe( "Quad Tree" , () => {
 			tree.add( 0.14 , 0.14 , "four" ) ;
 			expect( tree.trunc.children ).to.be( null ) ;
 			expect( [ ... tree.trunc.points ] ).to.be.like( [
-				{ x: 0.11, y: 0.11, e: "one" } ,
-				{ x: 0.12, y: 0.12, e: "two" } ,
-				{ x: 0.13, y: 0.13, e: "three" } ,
-				{ x: 0.14, y: 0.14, e: "four" } ,
+				{ x: 0.11, y: 0.11, e: "one", s: null } ,
+				{ x: 0.12, y: 0.12, e: "two", s: null } ,
+				{ x: 0.13, y: 0.13, e: "three", s: null } ,
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 			] ) ;
 
 			tree.add( 0.15 , 0.15 , "five" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[0].points ] ).to.be.like( [
-				{ x: 0.11, y: 0.11, e: "one" } ,
-				{ x: 0.12, y: 0.12, e: "two" }
+				{ x: 0.11, y: 0.11, e: "one", s: null } ,
+				{ x: 0.12, y: 0.12, e: "two", s: null }
 			] ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[3].points ] ).to.be.like( [
-				{ x: 0.13, y: 0.13, e: "three" } ,
-				{ x: 0.14, y: 0.14, e: "four" } ,
-				{ x: 0.15, y: 0.15, e: "five" }
+				{ x: 0.13, y: 0.13, e: "three", s: null } ,
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
+				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 
 			tree.removePoint( 0.11 , 0.11 ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[0].points ] ).to.be.like( [
-				{ x: 0.12, y: 0.12, e: "two" }
+				{ x: 0.12, y: 0.12, e: "two", s: null }
 			] ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[3].points ] ).to.be.like( [
-				{ x: 0.13, y: 0.13, e: "three" } ,
-				{ x: 0.14, y: 0.14, e: "four" } ,
-				{ x: 0.15, y: 0.15, e: "five" }
+				{ x: 0.13, y: 0.13, e: "three", s: null } ,
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
+				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 
 			tree.removePoint( 0.12 , 0.12 ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[0].points ] ).to.be.like( [] ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[3].points ] ).to.be.like( [
-				{ x: 0.13, y: 0.13, e: "three" } ,
-				{ x: 0.14, y: 0.14, e: "four" } ,
-				{ x: 0.15, y: 0.15, e: "five" }
+				{ x: 0.13, y: 0.13, e: "three", s: null } ,
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
+				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 
 			tree.removePoint( 0.13 , 0.13 ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( tree.trunc.children ).to.be( null ) ;
 			expect( [ ... tree.trunc.points ] ).to.be.like( [
-				{ x: 0.14, y: 0.14, e: "four" } ,
-				{ x: 0.15, y: 0.15, e: "five" }
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
+				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 		} ) ;
 	} ) ;

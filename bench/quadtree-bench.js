@@ -82,7 +82,7 @@ function rawDataArea( array , x , y , w , h ) {
 	for ( i = 0 , iMax = array.length ; i < iMax ; i ++ ) {
 		element = array[ i ] ;
 		if ( element[ 0 ] >= x && element[ 0 ] <= x + w && element[ 1 ] >= y && element[ 1 ] <= y + h ) {
-			result[ result.length ] = element ;
+			result[ result.length ] = element[ 2 ] ;
 		}
 	}
 
@@ -240,7 +240,7 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 			}
 		} ) ;
 
-		/*
+		//*
 		competitor( 'Array' , () => {
 			var i , points ;
 
@@ -274,4 +274,15 @@ createAreaPointsBenchmark( 300 , 100 , 0.2 ) ;
 createAreaPointsBenchmark( 1000 , 100 , 0.2 ) ;
 createAreaPointsBenchmark( 10000 , 100 , 0.2 ) ;
 createAreaPointsBenchmark( 100000 , 100 , 0.2 ) ;
+
+
+
+// Really slow tests
+
+//*/
+createClosestPointBenchmark( 400000 , 100 ) ;
+createAreaPointsBenchmark( 400000 , 100 , 0.01 ) ;
+createAreaPointsBenchmark( 400000 , 100 , 0.05 ) ;
+createAreaPointsBenchmark( 400000 , 100 , 0.2 ) ;
+//*/
 
