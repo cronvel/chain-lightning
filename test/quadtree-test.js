@@ -346,7 +346,7 @@ describe( "Quad Tree" , () => {
 
 			// Force a single zoom-out
 			tree.add( 1.2 , 1.2 , "out-one" ) ;
-			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[0].children[0].points ] ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: "one", s: null } ,
 				{ x: 0.12, y: 0.12, e: "two", s: null }
@@ -370,7 +370,7 @@ describe( "Quad Tree" , () => {
 			tree.add( 0.14 , 0.14 , "four" ) ;
 			tree.add( 0.15 , 0.15 , "five" ) ;
 			tree.add( 2.2 , 2.2 , "out-one" ) ;
-			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( [ ... tree.trunc.children[0].children[0].children[0].children[0].children[0].points ] ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: "one", s: null } ,
 				{ x: 0.12, y: 0.12, e: "two", s: null }
@@ -383,65 +383,6 @@ describe( "Quad Tree" , () => {
 			expect( [ ... tree.trunc.children[3].points ] ).to.be.like( [
 				{ x: 2.2, y: 2.2, e: "out-one", s: null }
 			] ) ;
-		} ) ;
-	} ) ;
-
-	describe( "misc tests" , () => {
-		
-		it( "test1" , () => {
-			var tree ;
-			
-			tree = new QuadTree() ;
-			tree.add( 0.1 , 0.1 , "bob" ) ;
-			tree.debug() ;
-		} ) ;
-
-		it( "test2" , () => {
-			var tree , i , point , leaf ;
-			
-			tree = new QuadTree( { maxLeafPoints: 4 } ) ;
-			
-			for ( i = 0 ; i < 16 ; i ++ ) {
-				tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
-			}
-			tree.debugValues() ;
-
-			console.log( "\n\n------------\n\n" ) ;
-
-			point = tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
-			tree.debugValues() ;
-
-			console.log( "\n\n------------\n\n" ) ;
-
-			for ( i = 0 ; i < 64 ; i ++ ) {
-				tree.add( Math.random() , Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
-			}
-			tree.debugValues() ;
-			
-			leaf = tree.getLeaf( point.x , point.y ) ;
-			console.log( "Searching point: " , point ) ;
-			console.log( leaf ) ;
-			console.log( leaf.node.points ) ;
-		} ) ;
-
-		it( "test3" , () => {
-			var tree , i , point , leaf ;
-			
-			tree = new QuadTree( { maxLeafPoints: 4 } ) ;
-			
-			console.log( "\n\n------------\n\n" ) ;
-
-			for ( i = 0 ; i < 64 ; i ++ ) {
-				tree.add( 0.1 * Math.random() , 0.1 * Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
-			}
-
-			point = tree.add( 0.1 * Math.random() , 0.1 * Math.random() , "bob" + Math.floor( 1000 * Math.random() ) ) ;
-			tree.debugValues() ;
-			
-			leaf = tree.getLeaf( point.x , point.y ) ;
-			console.log( "Searching point: " , point ) ;
-			console.log( leaf ) ;
-			console.log( leaf.node.points ) ;
 		} ) ;
 	} ) ;
 } ) ;
