@@ -161,7 +161,7 @@ describe( "Quad Tree" , () => {
 			expect( [ ... tree ] ).to.equal( [] ) ;
 		} ) ;
 
-		it( "zzz Get leaves/points/elements of an area" , () => {
+		it( "Get leaves/points/elements of an area" , () => {
 			var tree , elements , points , leaves ;
 			
 			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
@@ -173,11 +173,40 @@ describe( "Quad Tree" , () => {
 			tree.add( 0.14 , 0.14 , "four" ) ;
 			tree.add( 0.15 , 0.15 , "five" ) ;
 			leaves = tree.getAreaLeaves( 0.1 , 0.1 , 0.03 , 0.03 ) ;
-			console.log( "leaves" , leaves ) ;
+			
+			// Make it suitable for the assertion lib, transform Set into simple array
+			leaves[ 0 ].points = [ ... leaves[ 0 ].points ] ;
+			leaves[ 1 ].points = [ ... leaves[ 1 ].points ] ;
+			//console.log( "leaves" , leaves ) ;
+			expect( leaves ).to.be.like( [
+				{
+					points: [
+						{ x: 0.11, y: 0.11, e: 'one', s: null },
+						{ x: 0.12, y: 0.12, e: 'two', s: null }
+					],
+					children: null
+				},
+				{
+					points: [
+						{ x: 0.13, y: 0.13, e: undefined, s: [ 'three', 'three²' ] },
+						{ x: 0.14, y: 0.14, e: 'four', s: null },
+						{ x: 0.15, y: 0.15, e: 'five', s: null }
+					],
+					children: null
+				}
+			] ) ;
+			
 			points = tree.getAreaPoints( 0.1 , 0.1 , 0.03 , 0.03 ) ;
-			console.log( "points:" , points ) ;
+			//console.log( "points:" , points ) ;
+			expect( points ).to.be.like( [
+				{ x: 0.11, y: 0.11, e: 'one', s: null },
+				{ x: 0.12, y: 0.12, e: 'two', s: null },
+				{ x: 0.13, y: 0.13, e: undefined, s: [ 'three', 'three²' ] }
+			] ) ;
+
 			elements = tree.getArea( 0.1 , 0.1 , 0.03 , 0.03 ) ;
-			console.log( "elements:" , elements ) ;
+			//console.log( "elements:" , elements ) ;
+			expect( elements ).to.equal( [ 'one', 'two', 'three', 'three²' ] ) ;
 		} ) ;
 
 		it( "Test the area algorithm on random data, comparing it to brute-force results" , () => {
@@ -291,6 +320,68 @@ describe( "Quad Tree" , () => {
 			expect( [ ... tree.trunc.points ] ).to.be.like( [
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
+			] ) ;
+		} ) ;
+
+		it( "Out of trunc-node BBox should create a new zoomed-out trunc-node" , () => {
+			var tree , i , point , leaf ;
+			
+			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			
+			tree.add( 0.11 , 0.11 , "one" ) ;
+			tree.add( 0.12 , 0.12 , "two" ) ;
+			tree.add( 0.13 , 0.13 , "three" ) ;
+			tree.add( 0.14 , 0.14 , "four" ) ;
+			tree.add( 0.15 , 0.15 , "five" ) ;
+			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].points ] ).to.be.like( [
+				{ x: 0.11, y: 0.11, e: "one", s: null } ,
+				{ x: 0.12, y: 0.12, e: "two", s: null }
+			] ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[3].points ] ).to.be.like( [
+				{ x: 0.13, y: 0.13, e: "three", s: null } ,
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
+				{ x: 0.15, y: 0.15, e: "five", s: null }
+			] ) ;
+
+			// Force a single zoom-out
+			tree.add( 1.2 , 1.2 , "out-one" ) ;
+			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].children[0].points ] ).to.be.like( [
+				{ x: 0.11, y: 0.11, e: "one", s: null } ,
+				{ x: 0.12, y: 0.12, e: "two", s: null }
+			] ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].children[3].points ] ).to.be.like( [
+				{ x: 0.13, y: 0.13, e: "three", s: null } ,
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
+				{ x: 0.15, y: 0.15, e: "five", s: null }
+			] ) ;
+			expect( [ ... tree.trunc.children[3].points ] ).to.be.like( [
+				{ x: 1.2, y: 1.2, e: "out-one", s: null }
+			] ) ;
+
+
+			// Force a double zoom-out
+			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			
+			tree.add( 0.11 , 0.11 , "one" ) ;
+			tree.add( 0.12 , 0.12 , "two" ) ;
+			tree.add( 0.13 , 0.13 , "three" ) ;
+			tree.add( 0.14 , 0.14 , "four" ) ;
+			tree.add( 0.15 , 0.15 , "five" ) ;
+			tree.add( 2.2 , 2.2 , "out-one" ) ;
+			tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].children[0].children[0].points ] ).to.be.like( [
+				{ x: 0.11, y: 0.11, e: "one", s: null } ,
+				{ x: 0.12, y: 0.12, e: "two", s: null }
+			] ) ;
+			expect( [ ... tree.trunc.children[0].children[0].children[0].children[0].children[3].points ] ).to.be.like( [
+				{ x: 0.13, y: 0.13, e: "three", s: null } ,
+				{ x: 0.14, y: 0.14, e: "four", s: null } ,
+				{ x: 0.15, y: 0.15, e: "five", s: null }
+			] ) ;
+			expect( [ ... tree.trunc.children[3].points ] ).to.be.like( [
+				{ x: 2.2, y: 2.2, e: "out-one", s: null }
 			] ) ;
 		} ) ;
 	} ) ;
