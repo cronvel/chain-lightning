@@ -31,7 +31,8 @@
 
 
 const lib = require( '..' ) ;
-const QuadTree = lib.QuadTree ;
+const QuadTree = lib.trees() ;
+//const QuadTree = require( '../lib/Tree.template.js' ) ;
 
 
 
@@ -93,7 +94,7 @@ describe( "Quad Tree" , () => {
 		it( "Iterator" , () => {
 			var tree ;
 			
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 } ) ;
 			expect( tree.size ).to.be( 0 ) ;
 			
 			tree.add( 0.1 , 0.1 , "one" ) ;
@@ -112,7 +113,7 @@ describe( "Quad Tree" , () => {
 			expect( tree.size ).to.be( 9 ) ;
 		} ) ;
 
-		it( "Stack elements on the same point" , () => {
+		it( "Stack elements on the same slot" , () => {
 			var tree ;
 			
 			tree = new QuadTree() ;
@@ -174,7 +175,7 @@ describe( "Quad Tree" , () => {
 			expect( tree.size ).to.be( 0 ) ;
 			expect( [ ... tree ] ).to.equal( [] ) ;
 
-			// Now delete identical values at the same point
+			// Now delete identical values at the same slot
 			tree = new QuadTree() ;
 			
 			tree.add( 0.1 , 0.1 , "other1" ) ;
@@ -206,10 +207,10 @@ describe( "Quad Tree" , () => {
 			] ) ;
 		} ) ;
 
-		it( "Get leaves/points/elements of an area" , () => {
-			var tree , elements , points , leaves ;
+		it( "Get leaves/slots/elements of an area" , () => {
+			var tree , elements , slots , leaves ;
 			
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 } ) ;
 			
 			tree.add( 0.11 , 0.11 , "one" ) ;
 			tree.add( 0.12 , 0.12 , "two" ) ;
@@ -220,19 +221,19 @@ describe( "Quad Tree" , () => {
 			leaves = tree.getAreaLeaves( 0.1 , 0.1 , 0.03 , 0.03 ) ;
 			
 			// Make it suitable for the assertion lib, transform Set into simple array
-			leaves[ 0 ].points = [ ... leaves[ 0 ].points ] ;
-			leaves[ 1 ].points = [ ... leaves[ 1 ].points ] ;
+			leaves[ 0 ].slots = [ ... leaves[ 0 ].slots ] ;
+			leaves[ 1 ].slots = [ ... leaves[ 1 ].slots ] ;
 			//console.log( "leaves" , leaves ) ;
 			expect( leaves ).to.be.like( [
 				{
-					points: [
+					slots: [
 						{ x: 0.11, y: 0.11, e: 'one', s: null },
 						{ x: 0.12, y: 0.12, e: 'two', s: null }
 					],
 					children: null
 				},
 				{
-					points: [
+					slots: [
 						{ x: 0.13, y: 0.13, e: undefined, s: [ 'three', 'three²' ] },
 						{ x: 0.14, y: 0.14, e: 'four', s: null },
 						{ x: 0.15, y: 0.15, e: 'five', s: null }
@@ -241,9 +242,9 @@ describe( "Quad Tree" , () => {
 				}
 			] ) ;
 			
-			points = tree.getAreaPoints( 0.1 , 0.1 , 0.03 , 0.03 ) ;
-			//console.log( "points:" , points ) ;
-			expect( points ).to.be.like( [
+			slots = tree.getAreaSlots( 0.1 , 0.1 , 0.03 , 0.03 ) ;
+			//console.log( "slots:" , slots ) ;
+			expect( slots ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: 'one', s: null },
 				{ x: 0.12, y: 0.12, e: 'two', s: null },
 				{ x: 0.13, y: 0.13, e: undefined, s: [ 'three', 'three²' ] }
@@ -255,7 +256,7 @@ describe( "Quad Tree" , () => {
 		} ) ;
 
 		it( "Test the area algorithm on random data, comparing it to brute-force results" , () => {
-			var tree , points , elements , rawElements ,
+			var tree , slots , elements , rawElements ,
 				randomX , randomY , randomW , randomH ,
 				testCount = 100 , areaSizeLimit = 0.5 ,
 				rawData = generateRawData( 1000 ) ;
@@ -273,22 +274,22 @@ describe( "Quad Tree" , () => {
 				randomH = Math.random() * areaSizeLimit ;
 				randomY = Math.random() * ( 1 - randomH ) ;
 
-				points = tree.getAreaPoints( randomX , randomY , randomW , randomH ) ;
+				slots = tree.getAreaSlots( randomX , randomY , randomW , randomH ) ;
 				//console.log( "Seen:" , QuadTree.seen , " -- Overlap:" , QuadTree.overlap , " -- Encompass:" , QuadTree.encompass ) ;
 				elements = tree.getArea( randomX , randomY , randomW , randomH ) ;
 				// They must come in the same order, and BTW the test should be performed BEFORE sorting
-				expect( points.map( p => p.e ) ).to.equal( elements ) ;
+				expect( slots.map( p => p.e ) ).to.equal( elements ) ;
 
-				points.sort( ( a , b ) => a.x === b.x ? a.y - b.y : a.x - b.x ) ;
-				points = points.map( e => [ e.x , e.y , e.e ] ) ;
+				slots.sort( ( a , b ) => a.x === b.x ? a.y - b.y : a.x - b.x ) ;
+				slots = slots.map( e => [ e.x , e.y , e.e ] ) ;
 				rawElements = rawDataArea( rawData , randomX , randomY , randomW , randomH ) ;
 
-				expect( points ).to.equal( rawElements ) ;
+				expect( slots ).to.equal( rawElements ) ;
 			}
 		} ) ;
 
-		it( "Test the closest point algorithm on random data, comparing it to brute-force results" , () => {
-			var tree , point , element , rawElement ,
+		it( "Test the closest slot algorithm on random data, comparing it to brute-force results" , () => {
+			var tree , slot , element , rawElement ,
 				randomX , randomY ,
 				testCount = 100 ,
 				rawData = generateRawData( 1000 ) ;
@@ -299,28 +300,28 @@ describe( "Quad Tree" , () => {
 			while ( testCount -- ) {
 				randomX = Math.random() ;
 				randomY = Math.random() ;
-				point = tree.getClosestPointTo( randomX , randomY ) ;
+				slot = tree.getClosestSlotTo( randomX , randomY ) ;
 				element = tree.getClosestTo( randomX , randomY ) ;
 				rawElement = rawDataClosest( rawData , randomX , randomY ) ;
-				//console.log( "\n\nRESULTS:\n" , point , rawElement ) ;
-				expect( point.x ).to.be( rawElement[ 0 ] ) ;
-				expect( point.y ).to.be( rawElement[ 1 ] ) ;
-				expect( point.e ).to.be( rawElement[ 2 ] ) ;
-				expect( point.e ).to.be( element ) ;
+				//console.log( "\n\nRESULTS:\n" , slot , rawElement ) ;
+				expect( slot.x ).to.be( rawElement[ 0 ] ) ;
+				expect( slot.y ).to.be( rawElement[ 1 ] ) ;
+				expect( slot.e ).to.be( rawElement[ 2 ] ) ;
+				expect( slot.e ).to.be( element ) ;
 			}
 		} ) ;
 
 		it( "Node subdivision and node merging" , () => {
-			var tree , i , point , leaf ;
+			var tree , i , slot , leaf ;
 			
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 } ) ;
 			
 			tree.add( 0.11 , 0.11 , "one" ) ;
 			tree.add( 0.12 , 0.12 , "two" ) ;
 			tree.add( 0.13 , 0.13 , "three" ) ;
 			tree.add( 0.14 , 0.14 , "four" ) ;
 			expect( tree.trunk.children ).to.be( null ) ;
-			expect( [ ... tree.trunk.points ] ).to.be.like( [
+			expect( [ ... tree.trunk.slots ] ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: "one", s: null } ,
 				{ x: 0.12, y: 0.12, e: "two", s: null } ,
 				{ x: 0.13, y: 0.13, e: "three", s: null } ,
@@ -329,49 +330,49 @@ describe( "Quad Tree" , () => {
 
 			tree.add( 0.15 , 0.15 , "five" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].slots ] ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: "one", s: null } ,
 				{ x: 0.12, y: 0.12, e: "two", s: null }
 			] ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[3].slots ] ).to.be.like( [
 				{ x: 0.13, y: 0.13, e: "three", s: null } ,
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 
-			tree.removePoint( 0.11 , 0.11 ) ;
+			tree.removeSlot( 0.11 , 0.11 ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].slots ] ).to.be.like( [
 				{ x: 0.12, y: 0.12, e: "two", s: null }
 			] ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[3].slots ] ).to.be.like( [
 				{ x: 0.13, y: 0.13, e: "three", s: null } ,
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 
-			tree.removePoint( 0.12 , 0.12 ) ;
+			tree.removeSlot( 0.12 , 0.12 ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].points ] ).to.be.like( [] ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].slots ] ).to.be.like( [] ) ;
+			expect( [ ... tree.trunk.children[0].children[0].children[3].slots ] ).to.be.like( [
 				{ x: 0.13, y: 0.13, e: "three", s: null } ,
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 
-			tree.removePoint( 0.13 , 0.13 ) ;
+			tree.removeSlot( 0.13 , 0.13 ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( tree.trunk.children ).to.be( null ) ;
-			expect( [ ... tree.trunk.points ] ).to.be.like( [
+			expect( [ ... tree.trunk.slots ] ).to.be.like( [
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
 		} ) ;
 
 		it( "Out of trunk-node BBox should create a new zoomed-out trunk-node" , () => {
-			var tree , i , point , leaf ;
+			var tree , i , slot , leaf ;
 			
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 , autoResize: true } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 , autoResize: true } ) ;
 			
 			tree.add( 0.11 , 0.11 , "one" ) ;
 			tree.add( 0.12 , 0.12 , "two" ) ;
@@ -379,11 +380,11 @@ describe( "Quad Tree" , () => {
 			tree.add( 0.14 , 0.14 , "four" ) ;
 			tree.add( 0.15 , 0.15 , "five" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].slots ] ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: "one", s: null } ,
 				{ x: 0.12, y: 0.12, e: "two", s: null }
 			] ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[3].slots ] ).to.be.like( [
 				{ x: 0.13, y: 0.13, e: "three", s: null } ,
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
@@ -392,22 +393,22 @@ describe( "Quad Tree" , () => {
 			// Force a single zoom-out
 			tree.add( 1.2 , 1.2 , "out-one" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].children[0].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].children[0].slots ] ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: "one", s: null } ,
 				{ x: 0.12, y: 0.12, e: "two", s: null }
 			] ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].children[3].slots ] ).to.be.like( [
 				{ x: 0.13, y: 0.13, e: "three", s: null } ,
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
-			expect( [ ... tree.trunk.children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[3].slots ] ).to.be.like( [
 				{ x: 1.2, y: 1.2, e: "out-one", s: null }
 			] ) ;
 
 
 			// Force a double zoom-out
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 , autoResize: true } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 , autoResize: true } ) ;
 			
 			tree.add( 0.11 , 0.11 , "one" ) ;
 			tree.add( 0.12 , 0.12 , "two" ) ;
@@ -416,29 +417,29 @@ describe( "Quad Tree" , () => {
 			tree.add( 0.15 , 0.15 , "five" ) ;
 			tree.add( 2.2 , 2.2 , "out-one" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].children[0].children[0].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].children[0].children[0].slots ] ).to.be.like( [
 				{ x: 0.11, y: 0.11, e: "one", s: null } ,
 				{ x: 0.12, y: 0.12, e: "two", s: null }
 			] ) ;
-			expect( [ ... tree.trunk.children[0].children[0].children[0].children[0].children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[0].children[0].children[0].children[0].children[3].slots ] ).to.be.like( [
 				{ x: 0.13, y: 0.13, e: "three", s: null } ,
 				{ x: 0.14, y: 0.14, e: "four", s: null } ,
 				{ x: 0.15, y: 0.15, e: "five", s: null }
 			] ) ;
-			expect( [ ... tree.trunk.children[3].points ] ).to.be.like( [
+			expect( [ ... tree.trunk.children[3].slots ] ).to.be.like( [
 				{ x: 2.2, y: 2.2, e: "out-one", s: null }
 			] ) ;
 
 
 			// Translate trunk BBox when the first item to be inserted is out of bounds
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 , autoResize: true } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 , autoResize: true } ) ;
 			
 			tree.add( 2.2 , 2.2 , "out-one" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( tree.x ).to.be( 2 ) ;
 			expect( tree.y ).to.be( 2 ) ;
 			expect( tree.areaSize ).to.be( 1 ) ;
-			expect( [ ... tree.trunk.points ] ).to.be.like( [
+			expect( [ ... tree.trunk.slots ] ).to.be.like( [
 				{ x: 2.2, y: 2.2, e: "out-one", s: null }
 			] ) ;
 
@@ -447,30 +448,30 @@ describe( "Quad Tree" , () => {
 			expect( tree.x ).to.be( 2 ) ;
 			expect( tree.y ).to.be( 2 ) ;
 			expect( tree.areaSize ).to.be( 1 ) ;
-			expect( [ ... tree.trunk.points ] ).to.be.like( [
+			expect( [ ... tree.trunk.slots ] ).to.be.like( [
 				{ x: 2.2, y: 2.2, e: "out-one", s: null } ,
 				{ x: 2.2, y: 2.3, e: "out-two", s: null }
 			] ) ;
 
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 , autoResize: true } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 , autoResize: true } ) ;
 			
 			tree.add( -0.3 , 0.4 , "out-one" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( tree.x ).to.be( -1 ) ;
 			expect( tree.y ).to.be( 0 ) ;
 			expect( tree.areaSize ).to.be( 1 ) ;
-			expect( [ ... tree.trunk.points ] ).to.be.like( [
+			expect( [ ... tree.trunk.slots ] ).to.be.like( [
 				{ x: -0.3, y: 0.4, e: "out-one", s: null }
 			] ) ;
 
-			tree = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 , autoResize: true } ) ;
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 , autoResize: true } ) ;
 			
 			tree.add( 12.3 , 0.4 , "out-one" ) ;
 			//tree.debugValues() ; console.log( "\n\n------------\n\n" ) ;
 			expect( tree.x ).to.be( 12 ) ;
 			expect( tree.y ).to.be( 0 ) ;
 			expect( tree.areaSize ).to.be( 1 ) ;
-			expect( [ ... tree.trunk.points ] ).to.be.like( [
+			expect( [ ... tree.trunk.slots ] ).to.be.like( [
 				{ x: 12.3, y: 0.4, e: "out-one", s: null }
 			] ) ;
 		} ) ;

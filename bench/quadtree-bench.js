@@ -5,7 +5,7 @@
 
 
 
-const QuadTree = require( '../lib/QuadTree.js' ) ;
+const QuadTree = require( '../lib/trees.js' )() ;
 
 
 
@@ -102,10 +102,10 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 		var rawData = generateRawData( elementCount ) ,
 			testPoints = generateRandomPoints( testPointCount ) ,
 			defaultTree = new QuadTree() ,
-			tree4ppl = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ,
-			tree32ppl = new QuadTree( { maxLeafPoints: 32 } ) ,
-			tree64ppl = new QuadTree( { maxLeafPoints: 64 } ) ,
-			tree128ppl = new QuadTree( { maxLeafPoints: 128 } ) ;
+			tree4ppl = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 } ) ,
+			tree32ppl = new QuadTree( { maxLeafSlots: 32 } ) ,
+			tree64ppl = new QuadTree( { maxLeafSlots: 64 } ) ,
+			tree128ppl = new QuadTree( { maxLeafSlots: 128 } ) ;
 
 		for ( let e of rawData ) {
 			defaultTree.add( ... e ) ;
@@ -123,7 +123,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 4' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 4' , () => {
 			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
@@ -131,7 +131,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 32' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 32' , () => {
 			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
@@ -139,7 +139,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 64' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 64' , () => {
 			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
@@ -147,7 +147,7 @@ function createClosestPointBenchmark( elementCount , testPointCount ) {
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 128' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 128' , () => {
 			var i , element ;
 
 			for ( i = 0 ; i < testPointCount ; i ++ ) {
@@ -179,10 +179,10 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 		var rawData = generateRawData( elementCount ) ,
 			testAreas = generateRandomAreas( testAreaCount ) ,
 			defaultTree = new QuadTree() ,
-			tree4ppl = new QuadTree( { maxLeafPoints: 4 , minLeafPoints: 2 , minChildrenPoints: 3 } ) ,
-			tree32ppl = new QuadTree( { maxLeafPoints: 32 } ) ,
-			tree64ppl = new QuadTree( { maxLeafPoints: 64 } ) ,
-			tree128ppl = new QuadTree( { maxLeafPoints: 128 } ) ;
+			tree4ppl = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 } ) ,
+			tree32ppl = new QuadTree( { maxLeafSlots: 32 } ) ,
+			tree64ppl = new QuadTree( { maxLeafSlots: 64 } ) ,
+			tree128ppl = new QuadTree( { maxLeafSlots: 128 } ) ;
 
 		for ( let e of rawData ) {
 			defaultTree.add( ... e ) ;
@@ -199,7 +199,7 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 			var i , points ;
 
 			for ( i = 0 ; i < testAreaCount ; i ++ ) {
-				points = defaultTree.getAreaPoints( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
+				points = defaultTree.getAreaSlots( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
 			}
 		} ) ;
 
@@ -211,39 +211,39 @@ function createAreaPointsBenchmark( elementCount , testAreaCount , areaSize ) {
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 4' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 4' , () => {
 			var i , points ;
 
 			for ( i = 0 ; i < testAreaCount ; i ++ ) {
-				points = tree4ppl.getAreaPoints( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
+				points = tree4ppl.getAreaSlots( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 32' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 32' , () => {
 			var i , points ;
 
 			for ( i = 0 ; i < testAreaCount ; i ++ ) {
-				points = tree32ppl.getAreaPoints( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
+				points = tree32ppl.getAreaSlots( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 64' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 64' , () => {
 			var i , points ;
 
 			for ( i = 0 ; i < testAreaCount ; i ++ ) {
-				points = tree64ppl.getAreaPoints( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
+				points = tree64ppl.getAreaSlots( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
 			}
 		} ) ;
 
-		competitor( 'QuadTree with maxLeafPoints: 128' , () => {
+		competitor( 'QuadTree with maxLeafSlots: 128' , () => {
 			var i , points ;
 
 			for ( i = 0 ; i < testAreaCount ; i ++ ) {
-				points = tree128ppl.getAreaPoints( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
+				points = tree128ppl.getAreaSlots( testAreas[ i ][ 0 ] , testAreas[ i ][ 1 ] , testAreas[ i ][ 2 ] , testAreas[ i ][ 3 ] ) ;
 			}
 		} ) ;
 
-		/*
+		//*
 		competitor( 'Array' , () => {
 			var i , points ;
 
@@ -282,7 +282,7 @@ createAreaPointsBenchmark( 100000 , 100 , 0.2 ) ;
 
 // Really slow tests
 
-//*/
+/*/
 createClosestPointBenchmark( 400000 , 100 ) ;
 createAreaPointsBenchmark( 400000 , 100 , 0.001 ) ;
 createAreaPointsBenchmark( 400000 , 100 , 0.01 ) ;
