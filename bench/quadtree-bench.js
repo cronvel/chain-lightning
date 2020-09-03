@@ -5,7 +5,7 @@
 
 
 
-const QuadTree = require( '../lib/trees.js' )() ;
+const QuadTree = require( '../lib/trees.js' )( { slotStack: false } ) ;
 
 
 
