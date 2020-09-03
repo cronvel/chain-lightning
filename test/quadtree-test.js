@@ -624,11 +624,42 @@ describe( "Quad Tree storing bounding boxes" , () => {
 
 	describe( "Basic features" , () => {
 
+		it( "test" , () => {
+			var	QuadTree , tree ;
+			
+			// With stack
+			QuadTree = lib.trees( { boundingBox: true , slotStack: false } ) ;
+			
+			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 } ) ;
+			expect( tree.size ).to.be( 0 ) ;
+			
+			tree.add( 0.4 , 0.4 , 0.2 , 0.15 , "zero" ) ;
+			tree.add( 0.1 , 0.1 , 0.4 , 0.05 , "one" ) ;
+			tree.add( 0.4 , 0.35 , 0.3 , 0.1 , "two" ) ;
+			tree.add( 0.75 , 0.6 , 0.2 , 0.2 , "three" ) ;
+			tree.add( 0.2 , 0.25 , 0.2 , 0.2 , "four" ) ;
+			console.log( "\n======\n size/center-overlap" , tree.size , tree.trunk.centerOverlapCount , "\n" ) ;
+			tree.debug( undefined , undefined , undefined , true ) ;
+
+			tree.add( 0.6 , 0.6 , 0.2 , 0.3 , "five" ) ;
+			console.log( "\n======\n size/center-overlap" , tree.size , tree.trunk.centerOverlapCount , "\n" ) ;
+			tree.debug( undefined , undefined , undefined , true ) ;
+
+			tree.add( 0.4 , 0.4 , 0.2 , 0.2 , "six" ) ;
+			console.log( "\n======\n size/center-overlap" , tree.size , tree.trunk.centerOverlapCount , "\n" ) ;
+			tree.debug( undefined , undefined , undefined , true ) ;
+
+			tree.add( 0.85 , 0.2 , 0.1 , 0.7 , "seven" ) ;
+			console.log( "\n======\n size/center-overlap" , tree.size , tree.trunk.centerOverlapCount , "\n" ) ;
+			tree.debug( undefined , undefined , undefined , true ) ;
+		} ) ;
+		
+		return ;
 		it( "Iterator" , () => {
 			var	QuadTree , tree ;
 			
 			// With stack
-			QuadTree = lib.trees( { slotStack: true } ) ;
+			QuadTree = lib.trees( { slotStack: true , boundingBox: true } ) ;
 			
 			tree = new QuadTree( { maxLeafSlots: 4 , minLeafSlots: 2 , minChildrenSlots: 3 } ) ;
 			expect( tree.size ).to.be( 0 ) ;
@@ -670,7 +701,6 @@ describe( "Quad Tree storing bounding boxes" , () => {
 			expect( [ ... tree.values() ] ).to.equal( [ "two" , "five" , "six" , "three" , "nine" , "four" ] ) ;
 			expect( tree.size ).to.be( 6 ) ;
 		} ) ;
-		return ;
 
 		it( "Stack elements on the same slot" , () => {
 			var	QuadTree , tree ;
